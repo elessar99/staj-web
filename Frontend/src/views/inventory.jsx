@@ -1,0 +1,197 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import InventoryCard from "../cards/inventoryCard";
+import "./inventory.css";
+import SearchBar from "../components/SearchBar";
+
+const Inventory = () => {
+    const dispatch = useDispatch();
+    const [search, setSearch] = useState("")
+    const [clearInventory, setClearInventory] = useState([])
+    const { siteId } = useParams(); 
+    const inventories = useSelector((state) => state.inventories || []);
+    const [inventoryName, setInventoryName] = useState("");
+    const [inventoryLink, setInventoryLink] = useState("");
+    const [productSerialNumber, setProductSerialNumber] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+
+    useEffect(() => {
+        if (search) {
+            const searchLower = search.toLocaleLowerCase('tr');
+            
+            const filtered = inventories.filter(item => {
+            // Tüm string özelliklerde arama yap
+            return Object.values(item).some(value => {
+                if (typeof value === 'string') {
+                return value.toLocaleLowerCase('tr').includes(searchLower);
+                }
+                return false;
+            });
+            });
+
+            setClearInventory(filtered);
+        } else {
+            setClearInventory(inventories);
+        }
+    }, [search, inventories]);
+
+
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) {
+        alert('Lütfen bir dosya seçin');
+        return;
+        }
+        await inventoryUpload();
+    };
+
+    const inventoryUpload = async () => {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('siteId', siteId);
+
+        try {
+            const response = await axios.post(`http://localhost:5000/api/upload/`, formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setUploadProgress(percentCompleted);
+                }
+            }
+            )
+            console.log("File uploaded successfully:", response.data);
+            alert("File uploaded successfully");
+            fetchInventory();
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            alert("Error uploading file: " + error.message);
+        }
+    };
+
+
+    const createInventory = async () => {
+        try {
+            // Validasyonlar
+            if (inventoryName.length < 2) {
+            alert("Inventory name must be at least 2 characters long.");
+            return;
+            }
+            if (inventoryLink.length === 0) {
+            alert("Link cannot be empty.");
+            return;
+            }
+            if (productSerialNumber.length === 0) {
+            alert("Serial number cannot be empty.");
+            return;
+            }
+            // Benzersizlik kontrolü (isteğe bağlı)
+            if (inventories.some(inv => inv.name === inventoryName)) {
+            alert("Inventory name must be unique.");
+            return;
+            }
+            if (inventories.some(inv => inv.productSerialNumber === productSerialNumber)) {
+            alert("Inventory name must be unique.");
+            return;
+            }
+            // IP adresi validasyonu (şemanızdaki regex'e göre)
+            const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            if (!ipRegex.test(inventoryLink)) {
+            alert("Please enter a valid IP address.");
+            return;
+            }
+            const response = await axios.post('http://localhost:5000/api/inventories', {
+            name: inventoryName,
+            link: inventoryLink,
+            productSerialNumber: productSerialNumber,
+            siteId: siteId // useParams'tan gelen siteId
+            });
+            console.log("Inventory created:", response.data);
+            // State'leri temizle
+            setInventoryName("");
+            setInventoryLink("");
+            setProductSerialNumber("");
+            // Envanter listesini güncelle
+            dispatch({ type: "ADD_INVENTORY", payload: response.data });
+
+        } catch (error) {
+            console.error("Error creating inventory:", error);
+            alert("Error creating inventory: " + (error.response?.data?.message || error.message));
+        }
+        };
+
+    const fetchInventory = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/inventories/${siteId}`);
+            console.log("Inventories:", response.data);
+            dispatch({ type: "SET_INVENTORIES", payload: response.data });
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+        }
+    };
+    useEffect(() => {
+        fetchInventory();
+    }, [siteId]);
+  return (
+    <>
+        <div className="inventoryContainer">
+            <div className="navBar">
+                <div className="addInventory">
+                    <div className="inventoryAddBody">
+                        <div className="inventoryInputBar">
+                            <div className="headerName">
+                                Name : {inventoryName}
+                            </div>
+                            <input className="creatDeletInput" type="text" placeholder="Enter name" 
+                            onChange={(e)=>{setInventoryName(e.target.value)}} value={inventoryName}/>
+                        </div>
+                        <div className="inventoryInputBar">
+                            <div className="headerName">
+                                Link : {inventoryLink}
+                            </div>
+                            <input className="creatDeletInput" type="text" placeholder="Enter link" 
+                            onChange={(e)=>{setInventoryLink(e.target.value)}} value={inventoryLink}/>
+                        </div>
+                        <div className="inventoryInputBar">
+                            <div className="headerName">
+                                PSN :  {productSerialNumber}
+                            </div>
+                            <input className="creatDeletInput" type="text" placeholder="Enter PSN" 
+                            onChange={(e)=>{setProductSerialNumber(e.target.value)}} value={productSerialNumber}/>
+                        </div>
+                    </div>
+                    <div className="createDeletBtn" onClick={createInventory}>Add Item</div>
+                </div>
+                <div className="excelUpload">
+                    <div className="excelUploadBody">
+                        <div className="headerName">
+                            Excel :
+                        </div>
+                        <input className="creatDeletInput" type="file" onChange={handleFileChange}/>
+                    </div>
+                    <div className="createDeletBtn" onClick={handleUpload}>Upload Excel</div>
+                </div>
+            </div>
+            <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
+            {clearInventory.length > 0 ? (
+                <div className="inventoryList">
+                    {clearInventory.map((item) => (
+                        <InventoryCard key={item._id} name={item.name} link={item.link} productSerialNumber={item.productSerialNumber} _id={item._id}/>
+                    ))}
+                </div>
+            ) : (
+                <p>No inventory found</p>
+            )}
+        </div>
+    </>
+  );
+}
+export default Inventory;

@@ -1,0 +1,51 @@
+.inventoryContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inventoryList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.inventoryAddBody {
+  display: flex;
+  margin-bottom: 10px;
+}
+.addInventory{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  border: 3px solid #fff;
+  padding: 10px;
+  background-color: #404040;
+  border-radius: 10px;
+}
+.inventoryInputBar {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+  padding: 0 10px;
+}
+.excelUpload{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  border: 3px solid #fff;
+  padding: 0px 20px;
+  background-color: #404040;
+  border-radius: 10px;
+}
+.excelUploadBody{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+  padding: 5px;
+}

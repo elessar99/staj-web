@@ -1,0 +1,8 @@
+{
+    "editor.suggestSelection": "recentlyUsed",
+    "editor.quickSuggestions": {
+        "strings": "on",
+        "comments": "on"
+    },
+    "CodeGPT.apiKey": "CodeGPT Enterprise"
+}

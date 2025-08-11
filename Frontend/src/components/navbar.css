@@ -1,0 +1,43 @@
+.navbar{
+    display: flex;
+    background-color: #000;
+    color: white;
+    padding: 5px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+.navbar-links {
+    flex: 10;
+    background-color: rgb(59, 59, 59);
+    padding: 15px;
+    display: flex;
+    border-radius: 20px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}   
+.linkBtn {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5em;
+
+} 
+.userContainer{
+
+}
+.userInfo{
+    flex: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-family: cursive;
+    color: gray;
+    font-size: 1.4em;
+}
+.logoutBtn{
+    border-radius: 15px;
+    font-family: cursive;
+    flex: 1;
+    font-size: 1.6em;
+}

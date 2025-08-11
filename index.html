@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Excel Yükle</title>
+</head>
+<body>
+  <h2>Excel Dosyası Yükle</h2>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label>Excel Dosyası: </label>
+    <input type="file" name="file" required /><br><br>
+    <label>Site ID: </label>
+    <input type="text" name="siteId" placeholder="Site ID" /><br><br>
+    <button type="submit">Yükle</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      const response = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+    });
+  </script>
+</body>
+</html>
