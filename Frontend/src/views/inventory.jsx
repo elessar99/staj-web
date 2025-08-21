@@ -15,6 +15,9 @@ const Inventory = () => {
     const [inventoryName, setInventoryName] = useState("");
     const [inventoryLink, setInventoryLink] = useState("");
     const [productSerialNumber, setProductSerialNumber] = useState("");
+    const [inventoryDevice, setInventoryDevice] = useState("");
+    const [inventoryLocation, setInventoryLocation] = useState("");
+    const [inventoryStatus, setInventoryStatus] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -109,10 +112,17 @@ const Inventory = () => {
             return;
             }
             const response = await axios.post('http://localhost:5000/api/inventories', {
-            name: inventoryName,
-            link: inventoryLink,
-            productSerialNumber: productSerialNumber,
-            siteId: siteId // useParams'tan gelen siteId
+                device: inventoryDevice,
+                name: inventoryName,
+                link: inventoryLink,
+                productSerialNumber: productSerialNumber,
+                location: inventoryLocation,
+                status: inventoryStatus,
+                siteId: siteId // useParams'tan gelen siteId
+
+            },{
+                withCredentials: true,
+                credentials: 'include'
             });
             console.log("Inventory created:", response.data);
             // State'leri temizle
@@ -130,7 +140,10 @@ const Inventory = () => {
 
     const fetchInventory = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/inventories/${siteId}`);
+            const response = await axios.get(`http://localhost:5000/api/inventories/${siteId}`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
             console.log("Inventories:", response.data);
             dispatch({ type: "SET_INVENTORIES", payload: response.data });
         } catch (error) {
@@ -146,6 +159,13 @@ const Inventory = () => {
             <div className="navBar">
                 <div className="addInventory">
                     <div className="inventoryAddBody">
+                        <div className="inventoryInputBar">
+                            <div className="headerName">
+                                Device : {inventoryDevice}
+                            </div>
+                            <input className="creatDeletInput" type="text" placeholder="Enter device name" 
+                            onChange={(e)=>{setInventoryDevice(e.target.value)}} value={inventoryDevice}/>
+                        </div>
                         <div className="inventoryInputBar">
                             <div className="headerName">
                                 Name : {inventoryName}
@@ -167,6 +187,13 @@ const Inventory = () => {
                             <input className="creatDeletInput" type="text" placeholder="Enter PSN" 
                             onChange={(e)=>{setProductSerialNumber(e.target.value)}} value={productSerialNumber}/>
                         </div>
+                        <div className="inventoryInputBar">
+                            <div className="headerName">
+                                Location : {inventoryLocation}
+                            </div>
+                            <input className="creatDeletInput" type="text" placeholder="Enter location" 
+                            onChange={(e)=>{setInventoryLocation(e.target.value)}} value={inventoryLocation}/>
+                        </div>
                     </div>
                     <div className="createDeletBtn" onClick={createInventory}>Add Item</div>
                 </div>
@@ -181,10 +208,21 @@ const Inventory = () => {
                 </div>
             </div>
             <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
+            <div className="inventoryHeader">
+                <div className="inventoryHeaderBar">
+                    <div className="inventoryHeaderItem flex1">Device</div>
+                    <div className="inventoryHeaderItem flex3">Name</div>
+                    <div className="inventoryHeaderItem flex2">Link</div>
+                    <div className="inventoryHeaderItem flex2">PSN</div>
+                    <div className="inventoryHeaderItem flex1">Location</div>
+                    <div className="inventoryHeaderItem flex1">Status</div>
+                    <div className="inventoryHeaderItem flex1">Actions</div>
+                </div>
+            </div>
             {clearInventory.length > 0 ? (
                 <div className="inventoryList">
                     {clearInventory.map((item) => (
-                        <InventoryCard key={item._id} name={item.name} link={item.link} productSerialNumber={item.productSerialNumber} _id={item._id}/>
+                        <InventoryCard key={item._id} device={item.device} name={item.name} link={item.link} productSerialNumber={item.productSerialNumber} location={item.location} status={item.status} _id={item._id}/>
                     ))}
                 </div>
             ) : (

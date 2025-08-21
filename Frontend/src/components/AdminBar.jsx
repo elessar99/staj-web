@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css"; 
 import axios from "axios";
 
-const Navbar = () => {
+const AdminBar = () => {
   const [active, setActive] = useState("home");
   const project = useSelector((state) => state.project || []);
   const site = useSelector((state) => state.site || []);
@@ -27,22 +27,14 @@ const Navbar = () => {
   }
   
   useSelector((state) => state.project);
-  console.log(user)
   return (
     <div className="navbar">
       <div className="navbar-links">
-        {user.isAdmin? (
-          <div className="linkBtn"><a href="/admin/authorization">authorization</a></div>
-        ): <div/> }
-        <div className="linkBtn"><a href="/">Projects</a></div>
-        <div className="linkBtn"><a href={`/${project._id}/sites`}>Sites</a></div>
-        <div className="linkBtn"><a href={`/${site._id}/inventory`}>Inventory</a></div>
-        <div className="linkBtn"><a href="/filter/inventory">All Inventories</a></div>
-        <div className="linkBtn"><a href="/filter/site">All Sites</a></div>
+        <div className="linkBtn"><a href="/admin/authorization">authorization</a></div>
       </div>
         <div className="userInfo">{user.userName}</div>
-        <button className="logoutBtn" onClick={fetchLogout}>logout</button>
+
     </div>
   );
 }
-export default Navbar;
+export default AdminBar;

@@ -5,12 +5,14 @@ const {
   addInventory,
   updateInventory,
   deleteInventory,
-  allInventory,
+  changeStatus,
 } = require("../controllers/inventoryController");
+const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
 
-router.get("/:siteId", getInventories);
-router.post("/", addInventory);
-router.put("/:id", updateInventory);
-router.delete("/:id", deleteInventory);
+router.get("/:siteId", authMiddleware, getInventories);
+router.post("/", authMiddleware, addInventory);
+router.put("/:id", authMiddleware, updateInventory);
+router.delete("/:id", authMiddleware, adminMiddleware, deleteInventory);
+router.patch("/:id", authMiddleware, changeStatus);
 
 module.exports = router;

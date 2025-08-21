@@ -1,9 +1,16 @@
 const Inventory = require("../models/Inventory");
 const Site = require("../models/Site");
 const Project = require("../models/Project");
+const User = require("../models/User");
+
 
 const allInventory = async (req, res) => {
   try {
+    const userId = req.userId;
+    const isAdmin = req.isAdmin;
+    const user = await User.findById(userId).select("permissions");
+    const permissions = user.permissions
+    const siteList = permissions.flatMap(permission => permission.sites);
     const result = await Inventory.aggregate([
       {
         $lookup: {
@@ -36,8 +43,13 @@ const allInventory = async (req, res) => {
         }
       }
     ]);
-
-    res.json(result);
+    if (isAdmin) {
+      res.json(result);
+    }
+    const clearResult = result.filter(item => 
+      siteList.some(siteId => siteId.equals(item.siteId))
+    );
+    res.json(clearResult);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -45,6 +57,11 @@ const allInventory = async (req, res) => {
 
 const allSite = async (req, res) => {
   try {
+    const userId = req.userId;
+    const isAdmin = req.isAdmin;
+    const user = await User.findById(userId).select("permissions");
+    const permissions = user.permissions
+    const siteList = permissions.flatMap(permission => permission.sites);
     const result = await Site.aggregate([
       {
         $lookup: {
@@ -76,7 +93,13 @@ const allSite = async (req, res) => {
       }
     ]);
 
-    res.json(result);
+    if(isAdmin){
+      res.json(result);
+    }
+    const clearResult = result.filter(item => 
+      siteList.some(siteId => siteId.equals(item._id))
+    );
+    res.json(clearResult);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

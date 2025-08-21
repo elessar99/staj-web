@@ -5,9 +5,9 @@
 }
 .inventoryList {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  flex-direction: column;
+  width: 100%;
+  gap: 5px;
 }
 .inventoryAddBody {
   display: flex;
@@ -48,4 +48,39 @@
   align-items: start;
   justify-content: space-evenly;
   padding: 5px;
+}
+
+.inventoryHeader {
+  display: flex;
+  width: 100%;
+  padding: 10px 0px;
+  border: 2px solid #fff;
+  background-color: #404040;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+.inventoryHeaderBar{
+  padding: 0 10px;
+  display: flex;
+  width: 100%;
+  background-color: #404040;
+}
+
+.inventoryHeaderItem {
+  flex: 1;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: start;
+}
+.inventoryHeaderItem.flex1 {
+  flex: 1;
+}
+.inventoryHeaderItem.flex2 {
+  flex: 2;
+}
+.inventoryHeaderItem.flex3 {
+  flex: 3;
+}
+.inventoryHeaderItem.flex4 {
+  flex: 4;
 }

@@ -58,7 +58,10 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "Şifre yanlış." });
     }
 
-    const token = jwt.sign({ userId: user._id }, SECRET, { expiresIn: TOKEN_SURESI });
+    user.tokenVersion += 1; // Token versiyonunu artır
+    await user.save();
+    
+    const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin, tokenVersion: user.tokenVersion }, SECRET, { expiresIn: TOKEN_SURESI });
     console.log("Oluşturulan Token:", token);
     res.cookie("token", token, {
       httpOnly: true,          
@@ -72,7 +75,8 @@ const login = async (req, res) => {
       message:"giriş başarılı",
       user: {
           userName: user.userName,
-          email: user.email
+          email: user.email,
+          isAdmin: user.isAdmin
       }
      });
 

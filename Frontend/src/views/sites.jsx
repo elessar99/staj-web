@@ -53,8 +53,13 @@ const Sites = () => {
                 alert("site name must be unique.");
                 return;
             }
-            const response = await axios.post('http://localhost:5000/api/sites', 
-                { name: siteName, projectId: projectId });
+            const response = await axios.post('http://localhost:5000/api/sites',{
+                name: siteName, 
+                projectId: projectId 
+            },{
+                withCredentials: true,
+                credentials: 'include'
+            });
             console.log("Site created:", { name: siteName, projectId: projectId });
             fetchSites()
             setSiteName(""); // Input'u temizle
@@ -74,7 +79,10 @@ const Sites = () => {
                 alert("Project ID not found.");
                 return;
             }
-            const response = await axios.delete(`http://localhost:5000/api/sites/${siteId}`);
+            const response = await axios.delete(`http://localhost:5000/api/sites/${siteId}`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
             console.log("Site deleted:", response.data);
             await fetchSites();
             setSiteId(""); // Input'u temizle
@@ -85,12 +93,15 @@ const Sites = () => {
 
     const fetchSites = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/sites/${projectId}`);
+            const response = await axios.get(`http://localhost:5000/api/sites/${projectId}`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
             setprojectName(response.data.project[0].name)
             console.log(response.data)
             dispatch({ type: "SET_SITES", payload: response.data.sites });
         } catch (error) {
-            console.error("Error fetching site:", error);
+            console.log("Error fetching site:", error);
         }
     };
     useEffect(() => {
@@ -110,19 +121,9 @@ const Sites = () => {
                     </div>
                     <div className="createDeletBtn" onClick={createSite}>Create Site</div>
                 </div>
-                <div className="createDelet">
-                    <div className="createDeletBody">
-                        <div className="headerName">
-                            Site ID : {matchedSiteName}
-                        </div>
-                        <input className="creatDeletInput" type="text" placeholder="Enter site ID to delete" 
-                        onChange={(e)=>{setSiteId(e.target.value)}} value={siteId}/>
-                    </div>
-                    <div className="createDeletBtn" onClick={deleteSite}>Delete Site</div>
-                </div>
             </div>
+            <h2>Project: {projectName}</h2>
             <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
-        <h2>Project: {projectName}</h2>
             {clearSites.length > 0 ? (
                 <div className="sitesList">
                     {clearSites.map((site) => (

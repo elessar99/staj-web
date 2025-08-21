@@ -7,13 +7,14 @@ import Login from './views/login'
 import Loading from './views/loading'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
+import AdminBar from './components/AdminBar'
 
 
 function App() {
   const dispatch = useDispatch()
 
   const [control, setControl] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const login = async ()=>{
     setLoading(true)

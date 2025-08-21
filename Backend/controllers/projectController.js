@@ -1,45 +1,170 @@
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const Project = require("../models/Project");
 const Site = require("../models/Site");
 const Inventory = require("../models/Inventory");
+const User = require("../models/User");
 
-
-const getProjects = async (req, res) => {
+const getUnauthorizedProjects = async (req, res) => {
   try {
-    const projects = await Project.aggregate([
-      {
-        $lookup: {
-          from: 'sites',
-          localField: '_id',
-          foreignField: 'projectId',
-          as: 'sites'
-        }
-      },
-      {
-        $lookup: {
-          from: 'inventories',
-          localField: 'sites._id',
-          foreignField: 'siteId',
-          as: 'inventories'
-        }
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          siteCount: { $size: '$sites' },
-          totalInventoryCount: { $size: '$inventories' },
-          createdAt: 1,
-          updatedAt: 1
-        }
-      }
-    ]);
+    const { userId } = req.params;
 
-    res.json(projects);
+    // Kullanıcının yetkili olduğu proje ID'lerini bul
+    const user = await User.findById(userId).select("permissions");
+    const authorizedProjectIds = user.permissions.map(p => p.project.toString());
+
+    // Yetkili olunmayan projeleri getir (sadece id ve name alanlarıyla)
+    const unauthorizedProjects = await Project.find({
+      _id: { $nin: authorizedProjectIds }
+    })
+    .select('_id name') // Sadece id ve name alanlarını getir
+    .lean(); // Daha hızlı işlem için
+
+    res.json(unauthorizedProjects);
   } catch (error) {
+    console.error('Error in getUnauthorizedProjects:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+const getAuthorizedProjects = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Kullanıcının yetkili olduğu proje ID'lerini bul
+    const user = await User.findById(userId).select("permissions");
+    const authorizedProjectIds = user.permissions.map(p => p.project.toString());
+
+    // Yetkili olunmayan projeleri getir (sadece id ve name alanlarıyla)
+    const authorizedProjects = await Project.find({
+      _id: authorizedProjectIds
+    })
+    .select('_id name') // Sadece id ve name alanlarını getir
+    .lean(); // Daha hızlı işlem için
+
+    res.json(authorizedProjects);
+  } catch (error) {
+    console.error('Error in getAuthorizedProjects:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getAllProjects = async (req, res) => {
+  try {
+    const projectList = await Project.find()
+    res.json(projectList)
+  } catch (error) {
+    console.error('Error in getAllProjects:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+const getProjects = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const isAdmin = req.isAdmin;
+
+    let projects = [];
+
+    if (isAdmin) {
+      // Admin için tüm projeler
+      projects = await Project.aggregate([
+        {
+          $lookup: {
+            from: 'sites',
+            localField: '_id',
+            foreignField: 'projectId',
+            as: 'sites'
+          }
+        },
+        {
+          $lookup: {
+            from: 'inventories',
+            localField: 'sites._id',
+            foreignField: 'siteId',
+            as: 'inventories'
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            siteCount: { $size: '$sites' },
+            totalInventoryCount: { $size: '$inventories' },
+            createdAt: 1,
+            updatedAt: 1
+          }
+        }
+      ]);
+    } else {
+      // Normal kullanıcı için
+      const user = await User.findById(userId).select("permissions").populate('permissions.project');
+      
+      // Her proje için ayrı hesaplama
+      for (const permission of user.permissions) {
+        if (permission.project) {
+          const project = await Project.aggregate([
+            { $match: { _id: permission.project._id } },
+            {
+              $lookup: {
+                from: 'sites',
+                localField: '_id',
+                foreignField: 'projectId',
+                as: 'allSites'
+              }
+            },
+            {
+              $lookup: {
+                from: 'inventories',
+                localField: 'allSites._id',
+                foreignField: 'siteId',
+                as: 'allInventories'
+              }
+            },
+            {
+              $addFields: {
+                authorizedSites: {
+                  $filter: {
+                    input: '$allSites',
+                    as: 'site',
+                    cond: { $in: ['$$site._id', permission.sites] }
+                  }
+                },
+                authorizedInventories: {
+                  $filter: {
+                    input: '$allInventories',
+                    as: 'inventory',
+                    cond: { $in: ['$$inventory.siteId', permission.sites] }
+                  }
+                }
+              }
+            },
+            {
+              $project: {
+                _id: 1,
+                name: 1,
+                siteCount: { $size: '$authorizedSites' },
+                totalInventoryCount: { $size: '$authorizedInventories' },
+                createdAt: 1,
+                updatedAt: 1
+              }
+            }
+          ]);
+
+          if (project.length > 0) {
+            projects.push(project[0]);
+          }
+        }
+      }
+    }
+
+    res.json(projects);
+  } catch (error) {
+    console.error('Error in getProjects:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 
 const addProject = async (req, res) => {
@@ -101,5 +226,8 @@ const deleteProject = async (req, res) => {
 module.exports = { 
   getProjects, 
   addProject, 
-  deleteProject 
+  getAllProjects,
+  deleteProject,
+  getUnauthorizedProjects,
+  getAuthorizedProjects 
 };

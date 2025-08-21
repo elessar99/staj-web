@@ -1,0 +1,39 @@
+.userCardContanier{
+    display: flex;
+    background-color: gray;
+    color: black;
+    padding: 10px;
+}
+.userCardBtn{
+    background-color: black; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.swal-confirm-button {
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+.swal-cancel-button {
+  font-weight: normal;
+  padding: 10px 20px;
+}
+
+/* SweetAlert özel stilleri */
+.swal2-popup {
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.swal2-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}

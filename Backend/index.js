@@ -10,7 +10,8 @@ const inventoryRoutes = require("./routes/inventoryRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const authRoutes = require("./routes/authRoutes");
 const protectedRoutes = require("./routes/protectedRoutes");
-const filterRoutes = require("./routes/filterRoutes")
+const filterRoutes = require("./routes/filterRoutes");
+const userRoutes = require("./routes/userRouter");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/filter",filterRoutes)
 app.use("/api/upload", uploadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/protected", protectedRoutes);
+app.use("/api/admin", userRoutes);
 
 
 

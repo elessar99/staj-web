@@ -43,7 +43,10 @@ const SiteCard = ({name, _id, projectId, projectName, inventoryCount}) => {
         });
         if (result.isConfirmed) {
             try {
-            await axios.delete(`http://localhost:5000/api/sites/${_id}`);
+            await axios.delete(`http://localhost:5000/api/sites/${_id}`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
             Swal.fire('Silindi!', 'Kayıt başarıyla silindi.', 'success');
             window.location.reload()
             } catch (error) {

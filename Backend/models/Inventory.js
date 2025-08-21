@@ -6,6 +6,12 @@ const InventorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     default: () => new mongoose.Types.ObjectId(),
   },
+  device: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: [100, 'Cihaz adı 100 karakteri geçemez']
+  },
   name: {
     type: String,
     required: true,
@@ -27,6 +33,17 @@ const InventorySchema = new mongoose.Schema({
   productSerialNumber: {
     type: String,
     required: true,
+  },
+  location: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: [100, 'Konum 100 karakteri geçemez']
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive', 'maintenance'],
+    default: 'inactive',
   },
   siteId: { type: mongoose.Schema.Types.ObjectId, ref: "Site" },
 },

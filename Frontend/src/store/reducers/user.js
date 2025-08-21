@@ -1,6 +1,7 @@
 const initialState  = {
     email:"",
     userName: '',
+    isAdmin:"",
 }
 
 
@@ -9,7 +10,8 @@ export const userReducer = (state = initialState, action) => {
         case 'SET_USER':
             return {
                 email: action.payload.email,
-                userName: action.payload.userName
+                userName: action.payload.userName,
+                isAdmin: action.payload.isAdmin
             };
         case 'RESET_USER':
             return state

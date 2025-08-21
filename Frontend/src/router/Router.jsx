@@ -7,16 +7,13 @@ import Sites from "../views/sites";
 import Inventory from "../views/inventory";
 import FilterInventory from "../views/filterInventory";
 import FilterSite from "../views/filterSite";
+import Authorization from "../views/authorization";
 
 const Router = () => {
     const routes = useRoutes(
         [
             {
                 path: '/',
-                element: <Home/>
-            },
-            {
-                path: '/projects',
                 element: <Projects/>
             },
             {
@@ -34,6 +31,10 @@ const Router = () => {
             {
                 path: '/filter/site',
                 element: <FilterSite/>
+            },
+            {
+                path: '/admin/authorization',
+                element: <Authorization/>
             },
             {
                 path: '*',

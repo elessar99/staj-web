@@ -2,12 +2,15 @@ import { useState } from "react";
 import "./login.css"
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, setLogin] = useState({
     email : "",
-    password: ""
+    password: "",
+    isAdmin: false
   })
   
   const [register, setRegister] = useState({
@@ -28,7 +31,8 @@ const Login = () => {
       );
       console.log(response)
       dispatch({ type: "SET_USER", payload: response.data});
-      window.location.reload(); 
+      navigate("/");
+      window.location.reload()
     } catch (error){
       console.log("Error fatchLogin: ", error.response.data.error);
     }

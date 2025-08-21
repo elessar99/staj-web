@@ -13,7 +13,10 @@ const FilterInventory = () => {
     const [inventory, setInventory] = useState([])
     const fetchInventory = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/filter/inventory`);
+            const response = await axios.get(`http://localhost:5000/api/filter/inventory`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
             console.log("Inventories:", response.data);
             setInventory(response.data)
         } catch (error) {

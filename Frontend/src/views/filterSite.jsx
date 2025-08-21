@@ -35,11 +35,14 @@ const FilterSite = () => {
 
     const fetchSites = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/filter/site`);
+            const response = await axios.get(`http://localhost:5000/api/filter/site`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
             console.log(response.data)
             setSites(response.data)
         } catch (error) {
-            console.error("Error fetching site:", error);
+            console.log("Error fetching site:", error);
         }
     };
     useEffect(() => {

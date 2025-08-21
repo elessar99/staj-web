@@ -4,8 +4,77 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import "./inventoryCard.css"; 
 import Swal from 'sweetalert2';
+import { useState } from "react";
 
-const FullInventory = ({name, link, productSerialNumber, _id, sites, project}) => {
+const FullInventory = ({sites, project, name ="name", link ="link", productSerialNumber ="SerialNumber", _id, device ="device", location ="location", status ="status"}) => {
+    const [statusState, setStatusState] = useState(status)
+    const handleStatusChange = async (newStatus) => {
+        const result = await Swal.fire({
+          title: 'Statü Değiştirme Onayı',
+          html: `
+            <div style="text-align: left; line-height: 1.6; font-size: 14px;">
+              <div style="margin-bottom: 15px;">
+                <b>${name}</b> isimli cihazın durumu <b>${statusState}</b> → <b>${newStatus}</b> olarak değiştirilecek.
+              </div>
+              
+              <div style="background: #f8f8f8; padding: 12px; border-radius: 6px; border-left: 4px solid #ff9800;">
+                <div style="margin-bottom: 5px;"><b>Cihaz Detayları:</b></div>
+                <div>• <b>Cihaz:</b> ${device}</div>
+                <div>• <b>IP Adresi:</b> ${link}</div>
+                <div>• <b>Konum:</b> ${location}</div>
+              </div>
+            </div>
+          `,
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#1976d2',
+          cancelButtonColor: '#757575',
+          confirmButtonText: '<i class="fas fa-check"></i> Evet, Değiştir',
+          cancelButtonText: '<i class="fas fa-times"></i> İptal',
+          focusCancel: true,
+          showCloseButton: true,
+          customClass: {
+            confirmButton: 'swal-confirm-button',
+            cancelButton: 'swal-cancel-button'
+          }
+        });
+        
+        if (result.isConfirmed) {
+          try {
+            // StatusState'i hemen güncelle (optimistic update)
+            setStatusState(newStatus);
+            
+            // Backend'e istek gönder
+            const response = await axios.patch(
+              `http://localhost:5000/api/inventories/${_id}`, // Backend route'unuza uygun endpoint
+              { status: newStatus },
+              {
+                withCredentials: true,
+                credentials: 'include'
+              }
+            );
+            
+            console.log(response);
+            Swal.fire('Başarılı!', 'Durum başarıyla güncellendi.', 'success');
+            
+          } catch (error) {
+            // Hata durumunda state'i eski haline getir
+            setStatusState(status);
+            console.log(error);
+            
+            Swal.fire(
+              'Hata!', 
+              'Durum güncellenirken bir hata oluştu: ' + 
+              (error.response?.data?.message || error.message), 
+              'error'
+            );
+          }
+        } else {
+          // İptal edildiyse select'i eski değere geri al
+          setStatusState(statusState);
+        }
+      }
+
     const deleteInventory = async () => {
         const result = await Swal.fire({
             title: 'Envanter Silme Onayı',
@@ -35,7 +104,10 @@ const FullInventory = ({name, link, productSerialNumber, _id, sites, project}) =
         });
         if (result.isConfirmed) {
             try {
-            await axios.delete(`http://localhost:5000/api/inventories/${_id}`);
+            await axios.delete(`http://localhost:5000/api/inventories/${_id}`,{
+            withCredentials: true,
+            credentials: 'include'
+          });
             Swal.fire('Silindi!', 'Kayıt başarıyla silindi.', 'success');
             window.location.reload()
             } catch (error) {
@@ -43,16 +115,26 @@ const FullInventory = ({name, link, productSerialNumber, _id, sites, project}) =
             }
         }
     }
-    const dispatch = useDispatch();
+
     return (
         <div className="inventoryCardContainer">
             <div className="inventoryCard">
-                <div className="inventoryName">Name: {name}</div>
-                <div className="inventoryLink">Link: {link}</div>
-                <div className="inventoryPSN">PSN: {productSerialNumber}</div>
-                <div className="siteProjectName">Sites: {sites}</div>
-                <div className="siteProjectName">Project: {project}</div>
-                <div className="deletItemBtn" onClick={deleteInventory}>Delete Item</div>
+                <div className="inventoryCardInfo flex1">{device}</div>
+                <div className="inventoryCardInfo flex1">{project}</div>
+                <div className="inventoryCardInfo flex1">{sites}</div>
+                <div className="inventoryCardInfo flex3">{name}</div>
+                <div className="inventoryCardInfo flex2">{link}</div>
+                <div className="inventoryCardInfo flex2">{productSerialNumber}</div>
+                <div className="inventoryCardInfo flex1">{location}</div>
+                <select className="inventoryCardSelect flex1" value={statusState} onChange={
+                    (e)=>{handleStatusChange(e.target.value)}}>
+                    <option className="inventoryCardOptions optionActive" value="active">active</option>
+                    <option className="inventoryCardOptions optionInactive" value="inactive">inactive</option>
+                    <option className="inventoryCardOptions optionMaintenance" value="maintenance">maintenance</option>
+                </select>
+                <div className="inventoryCardInfo flex1">
+                    <div className="deletItemBtn flex1" onClick={deleteInventory}>Delete Item</div>
+                </div>
             </div>
         </div>
     );

@@ -21,7 +21,9 @@ const Projects = () => {
     
     const fetchProjects = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/projects');
+            const response = await axios.get('http://localhost:5000/api/projects',{
+                withCredentials: true
+            });
             console.log(response.data)
             dispatch({ type: "SET_PROJECTS", payload: response.data });
         } catch (error) {
@@ -40,7 +42,10 @@ const Projects = () => {
                 alert("Project name must be unique.");
                 return;
             }
-            const response = await axios.post('http://localhost:5000/api/projects', { name: projectName });
+            const response = await axios.post('http://localhost:5000/api/projects', { name: projectName },{
+                withCredentials: true,
+                credentials: 'include'
+            });
             dispatch({ type: "ADD_PROJECT", payload: response.data });
             window.location.reload()
             setProjectName(""); // Input'u temizle
@@ -80,23 +85,13 @@ const Projects = () => {
                 <div className="createDelet">
                     <div className="createDeletBody">
                         <div className="headerName">
-                            Proje Name : {projectName}
+                            Proje Name :
                         </div>
                         <input className="creatDeletInput" type="text" placeholder="Enter project name" 
                         value={projectName}
                         onChange={(e)=>{setProjectName(e.target.value)}}/>
                     </div>
                     <div className="createDeletBtn" onClick={createProject}>Create Project</div>
-                </div>
-                <div className="createDelet">
-                    <div className="createDeletBody">
-                        <div className="headerName">
-                            Proje Name : {matchedProjectName}
-                        </div>
-                        <input className="creatDeletInput" type="text" placeholder="Enter project ID to delete" 
-                        onChange={(e)=>{setProjectId(e.target.value)}} value={projectId}/>
-                    </div>
-                    <div className="createDeletBtn" onClick={deleteProject}>Delete Project</div>
                 </div>
             </div>
             
