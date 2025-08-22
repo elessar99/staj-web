@@ -65,6 +65,19 @@ const FilterInventory = () => {
         <div className="inventoryContainer">
             {search}
             <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
+            <div className="inventoryHeader">
+                <div className="inventoryHeaderBar">
+                    <div className="inventoryHeaderItem flex1">Device</div>
+                    <div className="inventoryHeaderItem flex1">Project</div>
+                    <div className="inventoryHeaderItem flex1">Site</div>
+                    <div className="inventoryHeaderItem flex3">Name</div>
+                    <div className="inventoryHeaderItem flex2">Link</div>
+                    <div className="inventoryHeaderItem flex2">PSN</div>
+                    <div className="inventoryHeaderItem flex1">Location</div>
+                    <div className="inventoryHeaderItem flex2">Status</div>
+                    <div className="inventoryHeaderItem flex2">Actions</div>
+                </div>
+            </div>
             {clearInventory.length > 0 ? (
                 <div className="inventoryList">
                     {clearInventory.map((item) => (

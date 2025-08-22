@@ -1,4 +1,5 @@
 
+import "./variables.css";
 import { useEffect, useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
@@ -7,7 +8,7 @@ import Login from './views/login'
 import Loading from './views/loading'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
-import AdminBar from './components/AdminBar'
+
 
 
 function App() {

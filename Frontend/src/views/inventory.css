@@ -1,4 +1,188 @@
+/* InventoryContainer.css */
 .inventoryContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.inventoryHeaderBar{
+  display: none;
+  justify-content: space-evenly;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.inventoryAddBtn {
+  padding: 10px 15px;
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(64, 224, 208, 0.3);
+  text-align: center;
+}
+.inventoryAddBtn:hover {
+  background: linear-gradient(to right, #38c9ba, #2abeb0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(64, 224, 208, 0.4);
+}
+.inventoryAddBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(64, 224, 208, 0.3);
+}
+
+.navBar {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.addInventory, .excelUpload {
+  flex: 1;
+  background: linear-gradient(to right, #ffffff 0%, #f8feff 100%);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #40e0d0;
+}
+
+.inventoryAddBody {
+  width: 97%;
+  margin-bottom: 15px;
+}
+
+.inventoryInputBar {
+  margin-bottom: 15px;
+}
+
+.headerName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.creatDeletInput {
+  color: black;
+  padding: 10px 15px;
+  width: 100%;
+  border: 2px solid #b2e0dd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #f9fdfc;
+}
+
+.creatDeletInput:focus {
+  outline: none;
+  border-color: #40e0d0;
+  box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.2);
+}
+
+.createDeletBtn {
+  padding: 12px 20px;
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(64, 224, 208, 0.3);
+  text-align: center;
+  width: 96,5%;
+}
+
+.createDeletBtn:hover {
+  background: linear-gradient(to right, #38c9ba, #2abeb0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(64, 224, 208, 0.4);
+}
+
+.createDeletBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(64, 224, 208, 0.3);
+}
+
+/* Inventory Header */
+.inventoryHeader {
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 0 15px;
+}
+
+.inventoryHeaderBar {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.inventoryHeaderItem {
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 15px;
+  text-align: start;
+}
+
+.flex1 { flex: 1; }
+.flex2 { flex: 2; }
+.flex3 { flex: 3; }
+
+/* Inventory List */
+.inventoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inventoryContainer > p {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 16px;
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9fdfc;
+  border-radius: 8px;
+  border: 1px dashed #b2e0dd;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 1024px) {
+  .navBar {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .inventoryContainer {
+    padding: 15px;
+  }
+  
+  .inventoryHeaderBar {
+    display: none; /* Mobilde header'ı gizle */
+  }
+  
+  .addInventory, .excelUpload {
+    padding: 15px;
+  }
+  
+  .createDeletBtn {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+
+
+/* .inventoryContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,4 +267,4 @@
 }
 .inventoryHeaderItem.flex4 {
   flex: 4;
-}
+} */

@@ -110,16 +110,13 @@ const Sites = () => {
   return (
     <>
         <div className="sitesContainer">
-            <div className="navBar">
-                <div className="createDelet">
-                    <div className="createDeletBody">
-                        <div className="headerName">
-                            Site Name : {siteName}
-                        </div>
-                        <input className="creatDeletInput" type="text" placeholder="Enter site name"
+            <div className="commonNavBar">
+                <div className="commonCreate">
+                    <div className="commonCreateBody">
+                        <input className="commonCreateInput" type="text" placeholder="Enter site name"
                         onChange={(e)=>{setSiteName(e.target.value)}} value={siteName}/>
                     </div>
-                    <div className="createDeletBtn" onClick={createSite}>Create Site</div>
+                    <div className="commonCreateBtn" onClick={createSite}>Create Site</div>
                 </div>
             </div>
             <h2>Project: {projectName}</h2>

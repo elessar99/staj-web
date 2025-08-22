@@ -1,7 +1,5 @@
 import {useRoutes} from "react-router-dom"
-
 import "./Router.css";
-import Home from "../views/home";
 import Projects from "../views/projects";
 import Sites from "../views/sites";
 import Inventory from "../views/inventory";

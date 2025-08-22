@@ -136,7 +136,8 @@ const getSites = async (req, res) => {
 
 const addSite = async (req, res) => {
   try {
-    const { name, projectId, userId } = req.body;
+    const userId = req.userId;
+    const { name, projectId } = req.body;
 
     // Gerekli alanların kontrolü
     if (!name || !projectId || !userId) {

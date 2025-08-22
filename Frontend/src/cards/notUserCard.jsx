@@ -9,12 +9,35 @@ import AddToProject from "../components/popup/AddToProject";
 import RemoveSitesFromUser from "../components/popup/removeSitesFromUser";
 import AddSitesToUser from "../components/popup/addSitesToUser";
 
-const UserCard = ({userId, userName="name", email="mail", isAdmin=false, permissions=[{project:"id",sites:[]}]}) => {
+const NotUserCard = ({userId, userName="name", email="mail", isAdmin=false, permissions=[{project:"id",sites:[]}]}) => {
     const [authority, setAuthority] = useState(isAdmin);
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [showRemoveModal, setShowRemoveModal] = useState(false);
-    const [showAddSitesModal, setShowAddSitesModal] = useState(false);
-    const [showRemoveSitesModal, setShowRemoveSitesModal] = useState(false);
+
+    const confirmUser = async () => {
+        try {
+            const response = await axios.post(
+                `http://localhost:5000/api/admin/confirmUser/${userId}`,
+                {},
+                {
+                    withCredentials: true,
+                    credentials: 'include'
+                }
+            );  
+            console.log(response);
+            Swal.fire('Başarılı!', 'Kullanıcı başarıyla onaylandı.', 'success');
+            window.location.reload()
+        } catch (error) { 
+            console.log(error.response);
+            let errorMessage = 'Kullanıcı onaylanırken bir hata oluştu.';
+            if (error.response?.status === 403) {
+                errorMessage = 'Bu işlem için yetkiniz yok.';
+            } else if (error.response?.status === 404) {
+                errorMessage = 'Kullanıcı bulunamadı.';
+            } else if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            }
+            Swal.fire('Hata!', errorMessage, 'error');
+        }
+    };
     
     const handleAuthorityChange = async (newAuthority) => {
         // Boolean değere çevir (select'ten string geliyor)
@@ -179,6 +202,12 @@ const handleDeleteUser = async () => {
                 <div className="userCardName" style={{flex:1}}>
                     {userName}
                 </div>
+                <div className="userCardName" style={{flex:1}}>
+                    {email}
+                </div>
+                <div className="userCardName" style={{flex:1}}>
+                    {userId}
+                </div>
                 <div className="authorityChange" style={{flex:1}}>
                     <select 
                         className="userCardSelect"
@@ -189,75 +218,19 @@ const handleDeleteUser = async () => {
                         <option className="userOption" value={false}>User</option>
                     </select>
                 </div>
-                <div className="userCardBtn" style={{flex:1}} onClick={() => setShowAddModal(true)}>
-                    Add Project 
-                </div>
-                <div className="userCardBtn" style={{flex:1}} onClick={() => setShowAddSitesModal(true)}>
-                    Add Site
-                </div>
-                <div className="userCardBtn" style={{flex:1}} onClick={() => setShowRemoveModal(true)}>
-                    Remove Project
-                </div>
-                <div className="userCardBtn" style={{flex:1}} onClick={() => setShowRemoveSitesModal(true)}>
-                    Remove Site
+                <div className="userCardBtn" style={{flex:1}} onClick={confirmUser}>
+                    Confirm User
                 </div>
                 <div className="userCardBtn" style={{flex:1}} onClick={handleDeleteUser}>
                     Delete User
                 </div>
             </div>
-            <div></div>
         </div>
-          {showAddModal && (
-            <AddToProject
-              userId={userId}
-              onClose={(success) => {
-                setShowAddModal(false);
-                if (success) {
-                  // Başarılı olursa yapılacak işlemler
-                }
-              }}
-            />
-          )}
-
-          {showRemoveModal && (
-            <RemoveFromProject
-              userId={userId}
-              onClose={(success) => {
-                setShowRemoveModal(false);
-                if (success) {
-                  // Başarılı olursa yapılacak işlemler
-                }
-              }}
-            />
-          )}
-          {showAddSitesModal && (
-            <AddSitesToUser 
-              userId={userId}
-              onClose={(success) => {
-                setShowAddSitesModal(false);
-                if (success) {
-                  // Başarılı olursa yapılacak işlemler
-                }
-              }}
-            />
-          )}
-
-          {showRemoveSitesModal && (
-            <RemoveSitesFromUser 
-              userId={userId}
-              onClose={(success) => {
-                setShowRemoveSitesModal(false);
-                if (success) {
-                  // Başarılı olursa yapılacak işlemler
-                }
-              }}
-            />
-          )}
       </>
     );
 };
 
-UserCard.propTypes = {
+NotUserCard.propTypes = {
     userId: PropTypes.string.isRequired,
     userName: PropTypes.string,
     email: PropTypes.string,
@@ -268,11 +241,11 @@ UserCard.propTypes = {
     }))
 };
 
-UserCard.defaultProps = {
+NotUserCard.defaultProps = {
     userName: "İsimsiz Kullanıcı",
     email: "email@example.com",
     isAdmin: false,
     permissions: []
 };
 
-export default UserCard;
+export default NotUserCard;

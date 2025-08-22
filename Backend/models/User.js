@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  approved: {
+    type: Boolean,
+    default: false,
+  },
   permissions :[{
     project: {
       type: mongoose.Schema.Types.ObjectId,

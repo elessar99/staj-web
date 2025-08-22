@@ -1,7 +1,8 @@
 const express = require("express");
 const { getUsers, deleteUser, changeAuthority,
     addProjectToUser , removeProjectFromUser,
-    addSitesToUser, removeSitesFromUser} = require("../controllers/userController");
+    addSitesToUser, removeSitesFromUser,
+getNoneVerifiedUsers, userVerification} = require("../controllers/userController");
 const router = express.Router();
 const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
 
@@ -19,6 +20,10 @@ router.post("/removeProject/:userId", authMiddleware, adminMiddleware, removePro
 router.post("/addSites/:userId", authMiddleware, adminMiddleware, addSitesToUser);
 
 router.post("/removeSites/:userId", authMiddleware, adminMiddleware, removeSitesFromUser);
+
+router.get("/noneVerifiedUsers", authMiddleware, adminMiddleware, getNoneVerifiedUsers);
+
+router.post("/confirmUser/:userId", authMiddleware, adminMiddleware, userVerification);
 
 
 module.exports = router;

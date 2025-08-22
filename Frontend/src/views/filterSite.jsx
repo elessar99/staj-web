@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import SiteCard from "../cards/siteCard";
 import "./sites.css";
-import "./common.css";
 import SearchBar from "../components/SearchBar";
 
 const FilterSite = () => {
@@ -50,8 +49,8 @@ const FilterSite = () => {
     }, []);
   return (
     <>  
-        <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
         <div className="sitesContainer">
+            <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
             {clearSites.length > 0 ? (
                 <div className="sitesList">
                     {clearSites.map((site) => (

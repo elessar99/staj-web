@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css"; 
 import axios from "axios";
+import netasLogo from "../assets/netas-logo2x.png";
 
 const Navbar = () => {
   const [active, setActive] = useState("home");
@@ -31,6 +32,7 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="navbar-links">
+        <img src={netasLogo} alt="Netaş Logo" height={36} />
         {user.isAdmin? (
           <div className="linkBtn"><a href="/admin/authorization">authorization</a></div>
         ): <div/> }

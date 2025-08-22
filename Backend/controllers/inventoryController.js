@@ -1,9 +1,13 @@
 const Inventory = require("../models/Inventory");
 const User = require("../models/User");
+const Site = require("../models/Site");
 
 const getInventories = async (req, res) => {
   try {
-    const { userId, siteId } = req.params;
+    const { siteId } = req.params;
+    const userId = req.userId;
+    console.log("userId:", userId, "siteId:", siteId);
+    const isAdmin = req.isAdmin 
 
     // Kullanıcıyı bul ve permissions'larını getir
     const user = await User.findById(userId).select("permissions");
@@ -19,6 +23,12 @@ const getInventories = async (req, res) => {
         authorizedSiteIds.push(...permission.sites.map(site => site.toString()));
       }
     });
+
+    if (isAdmin) {
+      // Admin ise tüm inventory'leri getir
+      const inventories = await Inventory.find({ siteId: siteId });
+      return res.json(inventories);
+    }
 
     // Eğer kullanıcı bu site'da yetkili değilse boş array döndür
     if (!authorizedSiteIds.includes(siteId)) {
@@ -37,7 +47,9 @@ const getInventories = async (req, res) => {
 
 const addInventory = async (req, res) => {
   try {
-    const { userId, siteId, device, name, link, productSerialNumber, location } = req.body;
+    const isAdmin = req.isAdmin;
+    const userId = req.userId;
+    const { siteId, device, name, link, productSerialNumber, location } = req.body;
 
     // Gerekli alanların kontrolü
     if (!userId || !siteId) {
@@ -64,12 +76,15 @@ const addInventory = async (req, res) => {
     );
 
     // Eğer kullanıcı bu projede yetkili değilse veya bu site'da yetkisi yoksa
-    if (!projectPermission || 
-        !projectPermission.sites || 
-        !projectPermission.sites.some(s => s.toString() === siteId)) {
+    if (
+      !isAdmin && (
+        !projectPermission ||
+        !projectPermission.sites ||
+        !projectPermission.sites.some(s => s.toString() === siteId)
+      )
+    ) {
       return res.status(403).json({ error: "Bu işlem için yetkiniz bulunmamaktadır." });
     }
-
     // Yetkisi varsa inventory oluştur ve kaydet
     const inventory = new Inventory({
       device,

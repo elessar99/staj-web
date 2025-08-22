@@ -1,4 +1,140 @@
+/* InventoryCard.css */
 .inventoryCardContainer {
+  background: linear-gradient(to right, #ffffff 0%, #f8feff 100%);
+  border-radius: 8px;
+  padding: 0 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 8px;
+  border-left: 3px solid #40e0d0;
+  transition: all 0.3s ease;
+}
+
+.inventoryCardContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(64, 224, 208, 0.15);
+  background: linear-gradient(to right, #f8feff 0%, #f0fdfb 100%);
+}
+
+.inventoryCard {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  min-height: 60px;
+}
+
+.inventoryCardInfo {
+  color: #2c3e50;
+  font-size: 15px;
+  text-align: start;
+  padding: 0 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inventoryCardSelect {
+  color: black;
+  padding: 8px 10px;
+  border: 2px solid #b2e0dd;
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: #f9fdfc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin: 0 4px;
+}
+
+.inventoryCardSelect:focus {
+  outline: none;
+  border-color: #40e0d0;
+  box-shadow: 0 0 0 2px rgba(64, 224, 208, 0.2);
+}
+
+.inventoryCardOptions {
+  padding: 8px;
+  font-size: 13px;
+}
+
+.optionActive {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.optionInactive {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.optionMaintenance {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.deletItemBtn {
+  padding: 8px 12px;
+  background: linear-gradient(to right, #ff6b6b, #ee5a52);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.25);
+}
+
+.deletItemBtn:hover {
+  background: linear-gradient(to right, #ee5a52, #dd4a42);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+.deletItemBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(255, 107, 107, 0.25);
+}
+
+/* Flex classes */
+.flex1 { flex: 1; }
+.flex2 { flex: 2; }
+.flex3 { flex: 3; }
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  .inventoryCard {
+    flex-wrap: wrap;
+    padding: 12px 0;
+  }
+  
+  .inventoryCardInfo, .inventoryCardSelect {
+    flex: 1 0 50%;
+    margin-bottom: 10px;
+    text-align: left;
+    padding: 0 5px;
+  }
+  
+  .deletItemBtn {
+    flex: 1 0 100%;
+    margin-top: 5px;
+    padding: 10px;
+  }
+  
+  .inventoryCardSelect {
+    text-align-last: center;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* .inventoryCardContainer {
     width: 100%;
 }
 .inventoryCard {
@@ -44,4 +180,4 @@
 }
 .flex4{
     flex: 4;
-}
+} */

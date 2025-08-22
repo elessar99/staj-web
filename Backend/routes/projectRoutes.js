@@ -4,8 +4,8 @@ const { getProjects, addProject, deleteProject, getUnauthorizedProjects, getAuth
 const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
 
 router.get("/", authMiddleware, getProjects);
-router.get("/add/:userId", getUnauthorizedProjects)
-router.get("/remove/:userId", getAuthorizedProjects)
+router.get("/add/:userId",authMiddleware, getUnauthorizedProjects)
+router.get("/remove/:userId",authMiddleware, getAuthorizedProjects)
 router.post("/", authMiddleware, addProject);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteProject);
 

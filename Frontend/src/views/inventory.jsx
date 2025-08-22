@@ -19,7 +19,19 @@ const Inventory = () => {
     const [inventoryLocation, setInventoryLocation] = useState("");
     const [inventoryStatus, setInventoryStatus] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
+    const [addItem, setAddItem] = useState(false);
+    const [uploadExcel, setUploadExcel] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0);
+
+    const handleChangeAddItem = () => {
+        setAddItem(!addItem);
+        if (uploadExcel) setUploadExcel(false);
+    };
+
+    const handleChangeUploadExcel = () => {
+        setUploadExcel(!uploadExcel);
+        if (addItem) setAddItem(false);
+    };
 
     useEffect(() => {
         if (search) {
@@ -156,56 +168,45 @@ const Inventory = () => {
   return (
     <>
         <div className="inventoryContainer">
+            <div className="inventoryHeaderBar">
+                <div className="inventoryAddBtn" onClick={handleChangeAddItem}>Add Item</div>
+                <div className="inventoryAddBtn" onClick={handleChangeUploadExcel}>Upload Excel</div>
+            </div>
             <div className="navBar">
-                <div className="addInventory">
+                {addItem && (<div className="addInventory">
                     <div className="inventoryAddBody">
                         <div className="inventoryInputBar">
-                            <div className="headerName">
-                                Device : {inventoryDevice}
-                            </div>
                             <input className="creatDeletInput" type="text" placeholder="Enter device name" 
                             onChange={(e)=>{setInventoryDevice(e.target.value)}} value={inventoryDevice}/>
                         </div>
                         <div className="inventoryInputBar">
-                            <div className="headerName">
-                                Name : {inventoryName}
-                            </div>
                             <input className="creatDeletInput" type="text" placeholder="Enter name" 
                             onChange={(e)=>{setInventoryName(e.target.value)}} value={inventoryName}/>
                         </div>
                         <div className="inventoryInputBar">
-                            <div className="headerName">
-                                Link : {inventoryLink}
-                            </div>
                             <input className="creatDeletInput" type="text" placeholder="Enter link" 
                             onChange={(e)=>{setInventoryLink(e.target.value)}} value={inventoryLink}/>
                         </div>
                         <div className="inventoryInputBar">
-                            <div className="headerName">
-                                PSN :  {productSerialNumber}
-                            </div>
                             <input className="creatDeletInput" type="text" placeholder="Enter PSN" 
                             onChange={(e)=>{setProductSerialNumber(e.target.value)}} value={productSerialNumber}/>
                         </div>
                         <div className="inventoryInputBar">
-                            <div className="headerName">
-                                Location : {inventoryLocation}
-                            </div>
                             <input className="creatDeletInput" type="text" placeholder="Enter location" 
                             onChange={(e)=>{setInventoryLocation(e.target.value)}} value={inventoryLocation}/>
                         </div>
                     </div>
                     <div className="createDeletBtn" onClick={createInventory}>Add Item</div>
-                </div>
-                <div className="excelUpload">
+                </div>)}
+                {uploadExcel && (<div className="excelUpload">
                     <div className="excelUploadBody">
                         <div className="headerName">
-                            Excel :
+                            Excel Upload
                         </div>
                         <input className="creatDeletInput" type="file" onChange={handleFileChange}/>
                     </div>
                     <div className="createDeletBtn" onClick={handleUpload}>Upload Excel</div>
-                </div>
+                </div>)}
             </div>
             <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
             <div className="inventoryHeader">
@@ -215,7 +216,7 @@ const Inventory = () => {
                     <div className="inventoryHeaderItem flex2">Link</div>
                     <div className="inventoryHeaderItem flex2">PSN</div>
                     <div className="inventoryHeaderItem flex1">Location</div>
-                    <div className="inventoryHeaderItem flex1">Status</div>
+                    <div className="inventoryHeaderItem flex2">Status</div>
                     <div className="inventoryHeaderItem flex1">Actions</div>
                 </div>
             </div>

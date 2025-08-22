@@ -58,6 +58,11 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "Şifre yanlış." });
     }
 
+      // Kullanıcı onaylı mı kontrol et
+    if (!user.approved) {
+      return res.status(403).json({ error: "Kullanıcı onaylanmamış." });
+    }
+
     user.tokenVersion += 1; // Token versiyonunu artır
     await user.save();
     

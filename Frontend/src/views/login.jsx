@@ -55,19 +55,14 @@ const Login = () => {
     <>
       <div className="pageBody">
           <form onSubmit={fetchLogin} className="loginForm">
+            <h2 className="formHeader">Login</h2>
             <div className="form">
-              <div>
-                E-mail: {login.email}
-              </div>
-              <input className="loginInput" type="mail" placeholder="mail" 
+              <input className="loginInput" type="mail" placeholder="Mail" 
               onChange={(e)=>{setLogin({...login,email:e.target.value})}} value={login.email}/>
             </div>
             
             <div className="form">
-              <div>
-                şifre: {login.password}
-              </div>
-              <input className="loginInput" type="password" placeholder="password" 
+              <input className="loginInput" type="password" placeholder="Password" 
               onChange={(e)=>{setLogin({...login,password:e.target.value})}} value={login.password}/>
             </div>
 
@@ -78,27 +73,19 @@ const Login = () => {
 
           
           <form onSubmit={fetchRegister} className="loginForm">
+            <h2 className="formHeader">Register</h2>
             <div className="form">
-              <div>
-                E-mail: {register.email}
-              </div>
-              <input className="loginInput" type="mail" placeholder="mail" 
+              <input className="loginInput" type="mail" placeholder="E mail" 
               onChange={(e)=>{setRegister({...register,email:e.target.value})}} value={register.email}/>
             </div>
 
             <div className="form">
-              <div>
-                User: {register.userName}
-              </div>
-              <input  className="loginInput" type="text" placeholder="User" 
+              <input  className="loginInput" type="text" placeholder="User Name" 
               onChange={(e)=>{setRegister({...register,userName:e.target.value})}} value={register.userName}/>
             </div>
             
             <div className="form">
-              <div>
-                şifre: {register.password}
-              </div>
-              <input className="loginInput" type="password" placeholder="password" 
+              <input className="loginInput" type="password" placeholder="Password" 
               onChange={(e)=>{setRegister({...register,password:e.target.value})}} value={register.password}/>
             </div>
 

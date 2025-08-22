@@ -81,17 +81,14 @@ const Projects = () => {
 
     return (
         <div className="projects-container">
-            <div className="navBar">
-                <div className="createDelet">
-                    <div className="createDeletBody">
-                        <div className="headerName">
-                            Proje Name :
-                        </div>
-                        <input className="creatDeletInput" type="text" placeholder="Enter project name" 
+            <div className="commonNavBar">
+                <div className="commonCreate">
+                    <div className="commonCreateBody">
+                        <input className="commonCreateInput" type="text" placeholder="Enter project name" 
                         value={projectName}
                         onChange={(e)=>{setProjectName(e.target.value)}}/>
                     </div>
-                    <div className="createDeletBtn" onClick={createProject}>Create Project</div>
+                    <div className="commonCreateBtn" onClick={createProject}>Create Project</div>
                 </div>
             </div>
             

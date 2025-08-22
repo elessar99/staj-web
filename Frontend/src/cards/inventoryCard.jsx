@@ -130,7 +130,7 @@ const InventoryCard = ({name ="name", link ="link", productSerialNumber ="Serial
                 <div className="inventoryCardInfo flex2">{link}</div>
                 <div className="inventoryCardInfo flex2">{productSerialNumber}</div>
                 <div className="inventoryCardInfo flex1">{location}</div>
-                <select className="inventoryCardSelect flex1" value={statusState} onChange={
+                <select className="inventoryCardSelect flex2" value={statusState} onChange={
                     (e)=>{handleStatusChange(e.target.value)}}>
                     <option className="inventoryCardOptions optionActive" value="active">active</option>
                     <option className="inventoryCardOptions optionInactive" value="inactive">inactive</option>

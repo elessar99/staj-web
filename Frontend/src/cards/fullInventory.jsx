@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import "./inventoryCard.css"; 
+import "./InventoryCard.css"; 
 import Swal from 'sweetalert2';
 import { useState } from "react";
 
@@ -126,13 +126,13 @@ const FullInventory = ({sites, project, name ="name", link ="link", productSeria
                 <div className="inventoryCardInfo flex2">{link}</div>
                 <div className="inventoryCardInfo flex2">{productSerialNumber}</div>
                 <div className="inventoryCardInfo flex1">{location}</div>
-                <select className="inventoryCardSelect flex1" value={statusState} onChange={
+                <select className="inventoryCardSelect flex2" value={statusState} onChange={
                     (e)=>{handleStatusChange(e.target.value)}}>
                     <option className="inventoryCardOptions optionActive" value="active">active</option>
                     <option className="inventoryCardOptions optionInactive" value="inactive">inactive</option>
                     <option className="inventoryCardOptions optionMaintenance" value="maintenance">maintenance</option>
                 </select>
-                <div className="inventoryCardInfo flex1">
+                <div className="inventoryCardInfo flex2">
                     <div className="deletItemBtn flex1" onClick={deleteInventory}>Delete Item</div>
                 </div>
             </div>

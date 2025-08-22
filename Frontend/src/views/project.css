@@ -1,4 +1,44 @@
+/* ProjectsContainer.css */
+.projects-container {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
 .projects-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.projects-container > p {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 16px;
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9fdfc;
+  border-radius: 8px;
+  border: 1px dashed #b2e0dd;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  .projects-container {
+    padding: 15px;
+  }
+  
+  .projects-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+
+/* .projects-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -31,7 +71,6 @@
     font-family: cursive;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-/* Proje oluşturma */
 .createProje {
     display: flex;
     justify-content: center;
@@ -78,7 +117,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Proje silme */
 
 .deleteProje {
     display: flex;
@@ -125,4 +163,4 @@
     align-items: center;
     font-family: cursive;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+} */

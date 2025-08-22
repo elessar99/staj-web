@@ -1,39 +1,184 @@
-.userCardContanier{
-    display: flex;
-    background-color: gray;
-    color: black;
-    padding: 10px;
-}
-.userCardBtn{
-    background-color: black; /* Green */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
+/* UserCard.css */
+.userCard {
+  background: linear-gradient(to right, #ffffff 0%, #f8feff 100%);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  border-left: 4px solid #40e0d0;
+  transition: all 0.3s ease;
 }
 
+.userCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(64, 224, 208, 0.2);
+  background: linear-gradient(to right, #f8feff 0%, #f0fdfb 100%);
+}
+
+.userCardContanier {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.userCardContanier > div {
+  padding: 10px;
+}
+
+.userCardName {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.authorityChange {
+  display: flex;
+  align-items: center;
+}
+
+.userCardSelect {
+  color: #000;
+  padding: 10px 15px;
+  border: 2px solid #b2e0dd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9fdfc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.userCardSelect:focus {
+  outline: none;
+  border-color: #40e0d0;
+  box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.2);
+}
+
+.adminOption {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.userOption {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.userCardBtn {
+  padding: 12px 15px;
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(64, 224, 208, 0.3);
+}
+
+.userCardBtn:hover {
+  background: linear-gradient(to right, #38c9ba, #2abeb0);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(64, 224, 208, 0.4);
+}
+
+.userCardBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(64, 224, 208, 0.3);
+}
+
+/* Silme butonu için özel stil */
+.userCardContanier > div:last-child .userCardBtn {
+  background: linear-gradient(to right, #ff6b6b, #ee5a52);
+  box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+}
+
+.userCardContanier > div:last-child .userCardBtn:hover {
+  background: linear-gradient(to right, #ee5a52, #dd4a42);
+  box-shadow: 0 5px 12px rgba(255, 107, 107, 0.4);
+}
+
+/* SweetAlert Özelleştirmeleri */
 .swal-confirm-button {
-  font-weight: bold;
-  padding: 10px 20px;
+  background: linear-gradient(to right, #40e0d0, #38c9ba) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 10px 20px !important;
+  box-shadow: 0 3px 8px rgba(64, 224, 208, 0.3) !important;
+}
+
+.swal-confirm-button:hover {
+  background: linear-gradient(to right, #38c9ba, #2abeb0) !important;
+  box-shadow: 0 5px 12px rgba(64, 224, 208, 0.4) !important;
 }
 
 .swal-cancel-button {
-  font-weight: normal;
-  padding: 10px 20px;
+  background: linear-gradient(to right, #b0bec5, #90a4ae) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 10px 20px !important;
+  box-shadow: 0 3px 8px rgba(176, 190, 197, 0.3) !important;
 }
 
-/* SweetAlert özel stilleri */
-.swal2-popup {
-  border-radius: 12px;
-  padding: 2rem;
+.swal-cancel-button:hover {
+  background: linear-gradient(to right, #90a4ae, #78909c) !important;
+  box-shadow: 0 5px 12px rgba(176, 190, 197, 0.4) !important;
 }
 
-.swal2-title {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+/* Silme butonu için özel SweetAlert stili */
+.swal-button--danger {
+  background: linear-gradient(to right, #ff6b6b, #ee5a52) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3) !important;
+}
+
+.swal-button--danger:hover {
+  background: linear-gradient(to right, #ee5a52, #dd4a42) !important;
+  box-shadow: 0 5px 12px rgba(255, 107, 107, 0.4) !important;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 1200px) {
+  .userCardContanier {
+    gap: 10px;
+  }
+  
+  .userCardBtn {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 992px) {
+  .userCardContanier {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .userCardContanier > div {
+    flex: 1 0 auto !important;
+    margin-bottom: 10px;
+  }
+  
+  .userCard {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .userCardSelect {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .userCardBtn {
+    padding: 10px;
+    font-size: 13px;
+  }
 }

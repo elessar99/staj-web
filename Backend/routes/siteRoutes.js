@@ -5,9 +5,9 @@ const { authMiddleware, adminMiddleware } = require("../middleware/authMiddlewar
 
 
 router.get("/:projectId", authMiddleware, getSites);
-router.get("/all/:projectId", getAllSites)
-router.get("/:projectId/missing", getMissingSites)
-router.get("/:projectId/included", getIncludedSites)
+router.get("/all/:projectId", authMiddleware, getAllSites)
+router.get("/:projectId/missing", authMiddleware, getMissingSites)
+router.get("/:projectId/included", authMiddleware, getIncludedSites)
 router.post("/", authMiddleware, addSite);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteSite);
 
