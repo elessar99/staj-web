@@ -144,6 +144,8 @@ const Inventory = () => {
             // Envanter listesini güncelle
             dispatch({ type: "ADD_INVENTORY", payload: response.data });
 
+            window.location.reload();
+
         } catch (error) {
             console.error("Error creating inventory:", error);
             alert("Error creating inventory: " + (error.response?.data?.message || error.message));

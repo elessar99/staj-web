@@ -82,6 +82,7 @@ const FilterInventory = () => {
                 <div className="inventoryList">
                     {clearInventory.map((item) => (
                         <FullInventory key={item._id} name={item.name} link={item.link} 
+                        device={item.device} location={item.location} status={item.status}
                         productSerialNumber={item.productSerialNumber} _id={item._id} 
                         sites={item.siteName} project={item.projectName}/>
                     ))}

@@ -32,6 +32,9 @@ const allInventory = async (req, res) => {
       { $unwind: { path: '$project', preserveNullAndEmptyArrays: true } },
       {
         $project: {
+          device: 1,
+          location: 1,
+          status: 1,
           _id: 1,
           name: 1,
           link: 1,
