@@ -64,8 +64,10 @@ const Message = () => {
   // Boş fonksiyon - içine sen backend isteğini yazabilirsin
   const markAsRead = async (messageId) => {
     try {
-      // await axios.put(`http://localhost:5000/api/messages/${messageId}/read`, {}, {...})
-      // setMessages(... güncelleme işlemi ...)
+      await axios.patch(`http://localhost:5000/api/messages/read/${messageId}`, {}, {
+        withCredentials: true,
+        credentials: 'include'
+      });
     } catch (error) {
       console.error("Mesaj okunamadı:", error);
     }
@@ -135,7 +137,7 @@ const Message = () => {
                   <div className="messageDate">
                     {new Date(msg.timestamp).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" })}
                   </div>
-                  {msg.isRead ? (
+                  {msg.read ? (
                     <div className="readStatus read">Read</div>
                   ) : (
                     <div className="readStatus unread">Unread</div>
@@ -170,7 +172,7 @@ const Message = () => {
                       ? new Date(msg.timestamp).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" })
                       : "Tarih yok"}
                   </div>
-                  {msg.isRead ? (
+                  {msg.read ? (
                     <div className="readStatus read">Read</div>
                   ) : (
                     <div className="readStatus unread">Unread</div>
@@ -193,7 +195,7 @@ const Message = () => {
               })}
             </div>
             <div className="popupStatus">
-              {selectedMessage.isRead ? "Okundu" : "Okunmadı"}
+              {selectedMessage.read ? "Okundu" : "Okunmadı"}
             </div>
             <button className="popupCloseBtn" onClick={() => setSelectedMessage(null)}>
               Close

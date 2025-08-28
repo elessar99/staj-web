@@ -45,3 +45,12 @@
     cursor: pointer;
     font-size: 14px;
 }
+
+.messageTitleInput {
+    color: black;
+    max-width: 95%;
+}
+.messageTextArea{
+    color: black;
+    max-width: 95%;
+}

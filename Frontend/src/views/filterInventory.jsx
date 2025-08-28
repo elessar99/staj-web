@@ -9,6 +9,7 @@ import SearchBar from "../components/SearchBar";
 
 const FilterInventory = () => {
     const [search, setSearch] = useState("")
+    const [deneme, setdeneme] = useState("second")
     const [clearInventory, setClearInventory] = useState([])
     const [inventory, setInventory] = useState([])
     const [category, setCategory] = useState("all")
@@ -105,8 +106,8 @@ const FilterInventory = () => {
 
   return (
     <>
-        <div className="inventoryContainer">
-            {category}
+        <div className="inventoryContainer" style={{color: "black"}}>
+            {deneme}
             <div className="inventoryFilterBar">
                 <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
                 <select name="inputFilter" id="00" onChange={(e)=>{setCategory(e.target.value)}}>

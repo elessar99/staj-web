@@ -34,8 +34,9 @@ const sendMessage = async (req, res) => {
 const getMessagesForUser = async (req, res) => {
     try {
         const userId = req.userId; // Kimlik doğrulama middleware'inden alınan kullanıcı ID'si
-        const messages = await Message.find({ to: userId }).sort({ timestamp: -1 });
-        res.json({ messages });
+        const receivedMessages = await Message.find({ to: userId }).sort({ timestamp: -1 });
+        const sentMessages = await Message.find({ from: userId }).sort({ timestamp: -1 });
+        res.json({ receivedMessages, sentMessages });
     } catch (err) {
         console.error('Mesajlar getirilirken hata:', err);
         res.status(500).json({ error: 'Sunucu hatası (getMessagesForUser).' });
