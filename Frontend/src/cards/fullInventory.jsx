@@ -56,6 +56,7 @@ const FullInventory = ({sites, project, name ="name", link ="link", productSeria
             
             console.log(response);
             Swal.fire('Başarılı!', 'Durum başarıyla güncellendi.', 'success');
+            window.location.reload()
             
           } catch (error) {
             // Hata durumunda state'i eski haline getir

@@ -28,7 +28,7 @@ function App() {
       dispatch({ type: "SET_USER", payload: response.data.user})
       setLoading(false)
     } catch (error) {
-      console.log(error.response.data.error)
+      console.log(error)
       setControl(false)
       setLoading(false)
     }

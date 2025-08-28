@@ -6,6 +6,8 @@ import Inventory from "../views/inventory";
 import FilterInventory from "../views/filterInventory";
 import FilterSite from "../views/filterSite";
 import Authorization from "../views/authorization";
+import UserPage from "../views/userPage";
+import Message from "../views/message";
 
 const Router = () => {
     const routes = useRoutes(
@@ -31,8 +33,16 @@ const Router = () => {
                 element: <FilterSite/>
             },
             {
-                path: '/admin/authorization',
+                path: '/admin',
                 element: <Authorization/>
+            },
+            {
+                path: '/user',
+                element: <UserPage/>
+            },
+            {
+                path: '/messages/:userId',
+                element: <Message/>
             },
             {
                 path: '*',

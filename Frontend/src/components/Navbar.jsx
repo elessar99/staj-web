@@ -34,8 +34,8 @@ const Navbar = () => {
       <div className="navbar-links">
         <img src={netasLogo} alt="Netaş Logo" height={36} />
         {user.isAdmin? (
-          <div className="linkBtn"><a href="/admin/authorization">authorization</a></div>
-        ): <div/> }
+          <div className="linkBtn"><a href="/admin">Admin</a></div>
+        ): <div className="linkBtn"><a href="/user">User</a></div> }
         <div className="linkBtn"><a href="/">Projects</a></div>
         <div className="linkBtn"><a href={`/${project._id}/sites`}>Sites</a></div>
         <div className="linkBtn"><a href={`/${site._id}/inventory`}>Inventory</a></div>

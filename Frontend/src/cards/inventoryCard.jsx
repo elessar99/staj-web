@@ -102,6 +102,7 @@ const InventoryCard = ({name ="name", link ="link", productSerialNumber ="Serial
         
         console.log(response);
         Swal.fire('Başarılı!', 'Durum başarıyla güncellendi.', 'success');
+        window.location.reload()
         
       } catch (error) {
         // Hata durumunda state'i eski haline getir

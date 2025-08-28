@@ -58,6 +58,17 @@
 .inventoryInputBar {
   margin-bottom: 15px;
 }
+.inventoryInputBarSelect {
+  text-align: left;
+  color: black;
+  padding: 10px 15px;
+  width: 100%;
+  border: 2px solid #b2e0dd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #f9fdfc;
+}
 
 .headerName {
   font-size: 14px;

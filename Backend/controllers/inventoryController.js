@@ -1,6 +1,7 @@
 const Inventory = require("../models/Inventory");
 const User = require("../models/User");
 const Site = require("../models/Site");
+const {createLog} = require("./logController");
 
 const getInventories = async (req, res) => {
   try {
@@ -96,6 +97,13 @@ const addInventory = async (req, res) => {
     });
 
     await inventory.save();
+
+    await createLog({
+      userId: userId,
+      action: "ADD_INVENTORY",
+      details: `Inventory eklendi: ${inventory._id} - ${inventory.name}`
+    });
+
     res.json({ 
       success: true, 
       message: "Inventory başarıyla eklendi.",
@@ -110,12 +118,28 @@ const addInventory = async (req, res) => {
 
 const updateInventory = async (req, res) => {
   const updated = await Inventory.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  await createLog({
+    userId: req.userId,
+    action: "UPDATE_INVENTORY",
+    details: `Inventory güncellendi: ${updated.name} - ${updated.productSerialNumber}`
+  });
   res.json(updated);
 };
 
 const deleteInventory = async (req, res) => {
+  const userId = req.userId;
+  const inventoryItem = await Inventory.findById(req.params.id);
+  if (!inventoryItem) {
+    return res.status(404).json({ success: false, message: "Inventory item not found" });
+  }
   await Inventory.findByIdAndDelete(req.params.id);
+  await createLog({
+    userId: userId,
+    action: "DELETE_INVENTORY",
+    details: `Inventory silindi: ${inventoryItem.name} - ${inventoryItem.productSerialNumber}`
+  });
   res.json({ success: true });
+
 };
 
 const changeStatus = async (req, res) => {
@@ -139,7 +163,11 @@ const changeStatus = async (req, res) => {
         message: 'Belirtilen ID ile inventory öğesi bulunamadı'
       });
     }
-
+    await createLog({
+      userId: req.userId,
+      action: "CHANGE_INVENTORY_STATUS",
+      details: `Inventory durumu değiştirildi: ${updatedItem.name} - Yeni Durum: ${status}`
+    });
     // Başarılı yanıt döndür
     res.status(200).json({
       success: true,

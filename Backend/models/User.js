@@ -23,6 +23,34 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  sicilNo: {
+    type: String,
+    default: "",
+  },
+  position: {
+    type: String,
+    default: "",
+  },
+  phone: {
+    type: String,
+    default: "",
+  },
+  messages: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Message",
+  }],
+  department: {
+    type: String,
+    default: "",
+  },
+  accountTerminatedDate: {
+    type: Date,
+    default: null,
+  },
+  logs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Log",
+  }],
   permissions :[{
     project: {
       type: mongoose.Schema.Types.ObjectId,

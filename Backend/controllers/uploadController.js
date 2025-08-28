@@ -1,6 +1,7 @@
 const ExcelJS = require("exceljs");
 const fs = require("fs");
 const Inventory = require("../models/Inventory");
+const { createLog } = require("./logController");
 
 const uploadExcel = async (req, res) => {
   try {
@@ -29,6 +30,12 @@ const uploadExcel = async (req, res) => {
 
     await Inventory.insertMany(rows);
     fs.unlinkSync(req.file.path); // dosyayı sil
+
+    await createLog({
+      userId: req.userId,
+      action: "UPLOAD_EXCEL",
+      details: `${rows.length} envanter kaydı yüklendi. Site ID: ${req.body.siteId || "manual"}`
+    });
 
     res.status(200).json({ message: `${rows.length} kayıt başarıyla eklendi.` });
   } catch (error) {

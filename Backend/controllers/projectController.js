@@ -4,6 +4,8 @@ const Project = require("../models/Project");
 const Site = require("../models/Site");
 const Inventory = require("../models/Inventory");
 const User = require("../models/User");
+const { createLog } = require("./logController");
+
 
 const getUnauthorizedProjects = async (req, res) => {
   try {
@@ -170,11 +172,17 @@ const getProjects = async (req, res) => {
 const addProject = async (req, res) => {
   const project = new Project({ name: req.body.name });
   await project.save();
+  await createLog({
+    userId: req.userId, 
+    action: "ADD_PROJECT", 
+    details: `Proje eklendi: ${project._id} - ${project.name}`
+  });
   res.json(project);
 };
 
 const deleteProject = async (req, res) => {
   try {
+    const userId = req.userId;
     const projectId = req.params.id;
 
     // 1. Projeye ait tüm siteleri bul
@@ -193,6 +201,12 @@ const deleteProject = async (req, res) => {
     if (!deletedProject) {
       return res.status(404).json({ message: "Proje bulunamadı" });
     }
+
+    await createLog({
+      userId: userId,
+      action: "DELETE_PROJECT",
+      details: `Proje silindi: ${deletedProject._id} - ${deletedProject.name}`
+    });
 
     res.json({
       message: "Proje, siteler ve envanterler silindi",

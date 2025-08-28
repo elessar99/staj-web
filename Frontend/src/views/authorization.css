@@ -1,4 +1,5 @@
 .userVerificationBtn {
+  margin-bottom: 16px;
   padding: 12px 15px;
   background: linear-gradient(to right, #40e0d0, #38c9ba);
   color: white;
@@ -20,4 +21,47 @@
 .userVerificationBtn:active {
   transform: translateY(1px);
   box-shadow: 0 2px 6px rgba(64, 224, 208, 0.3);
+}
+
+.userListBtn {
+  padding: 12px 15px;
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(255, 179, 71, 0.3);
+}
+.userListBtn:hover {
+  background: linear-gradient(to right, #38c9ba, #2abeb0);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(255, 179, 71, 0.4);
+}
+.userListBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 179, 71, 0.3);
+}
+
+.userListHeadrer {
+  display: flex;
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  padding: 16px 76px 16px 24px;
+}
+.userListHeadrerItem {
+  flex: 1;
+  text-align: start;
+  padding: 0 8px;
+}
+
+.f3{
+  flex: 3;
+}
+.f2{
+  flex: 2;
 }

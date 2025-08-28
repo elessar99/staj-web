@@ -11,7 +11,9 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const authRoutes = require("./routes/authRoutes");
 const protectedRoutes = require("./routes/protectedRoutes");
 const filterRoutes = require("./routes/filterRoutes");
+const adminRoutes = require("./routes/AdminRouter");
 const userRoutes = require("./routes/userRouter");
+const messageRoutes = require("./routes/messageRouter");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -25,6 +27,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
+app.use("/api/user", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/sites", siteRoutes);
 app.use("/api/inventories", inventoryRoutes);
@@ -32,7 +35,8 @@ app.use("/api/filter",filterRoutes)
 app.use("/api/upload", uploadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/protected", protectedRoutes);
-app.use("/api/admin", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/messages", messageRoutes);
 
 
 

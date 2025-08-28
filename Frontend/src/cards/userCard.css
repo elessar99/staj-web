@@ -4,9 +4,10 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   border-left: 4px solid #40e0d0;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .userCard:hover {
@@ -19,37 +20,134 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  flex-wrap: wrap;
 }
 
-.userCardContanier > div {
-  padding: 10px;
-}
-
-.userCardName {
-  font-weight: 600;
+.userCardInfo {
+  flex: 1;
   color: #2c3e50;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
 }
 
-.authorityChange {
+.userCardMoreBtn {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.userCardMoreBtn:hover {
+  background-color: #e0f7fa;
+  transform: rotate(90deg);
+}
+
+.userCardMoreBtn span {
+  color: #7f8c8d;
+  transition: color 0.3s ease;
+}
+
+.userCardMoreBtn:hover span {
+  color: #40e0d0;
+}
+
+/* Modal Stilleri */
+.userCardModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.userCardModal {
+  background: linear-gradient(to bottom, #ffffff 0%, #f8feff 100%);
+  border-radius: 16px;
+  padding: 25px;
+  width: 350px;
+  max-width: 90vw;
+  max-height: 80vh;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e0f7fa;
+  border-top: 5px solid #40e0d0;
+  overflow-y: auto;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.userCardModal h4 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0f7fa;
+}
+
+.userCardModalBtn {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 8px 0;
+  background: linear-gradient(to right, #40e0d0, #38c9ba);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(64, 224, 208, 0.3);
+  text-align: left;
+}
+
+.userCardModalBtn:hover {
+  background: linear-gradient(to right, #38c9ba, #2abeb0);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(64, 224, 208, 0.4);
+}
+
+.userCardModalBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(64, 224, 208, 0.3);
+}
+
+/* Silme butonu için özel stil */
+.userCardModalBtn:nth-last-child(3) {
+  background: linear-gradient(to right, #ff6b6b, #ee5a52);
+  box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+}
+
+.userCardModalBtn:nth-last-child(3):hover {
+  background: linear-gradient(to right, #ee5a52, #dd4a42);
+  box-shadow: 0 5px 12px rgba(255, 107, 107, 0.4);
 }
 
 .userCardSelect {
   color: #000;
-  padding: 10px 15px;
+  padding: 8px 12px;
   border: 2px solid #b2e0dd;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 14px;
   background-color: #f9fdfc;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
-  text-align: center;
+  margin-left: 8px;
+  width: 120px;
 }
 
 .userCardSelect:focus {
@@ -58,127 +156,112 @@
   box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.2);
 }
 
-.adminOption {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-}
-
-.userOption {
-  background-color: #e3f2fd;
-  color: #1565c0;
-}
-
-.userCardBtn {
-  padding: 12px 15px;
-  background: linear-gradient(to right, #40e0d0, #38c9ba);
+.userCardModalClose {
+  width: 100%;
+  padding: 10px 15px;
+  margin-top: 15px;
+  background: linear-gradient(to right, #b0bec5, #90a4ae);
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
   transition: all 0.3s ease;
-  text-align: center;
-  box-shadow: 0 3px 8px rgba(64, 224, 208, 0.3);
+  box-shadow: 0 3px 8px rgba(176, 190, 197, 0.3);
 }
 
-.userCardBtn:hover {
-  background: linear-gradient(to right, #38c9ba, #2abeb0);
+.userCardModalClose:hover {
+  background: linear-gradient(to right, #90a4ae, #78909c);
   transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(64, 224, 208, 0.4);
+  box-shadow: 0 5px 12px rgba(176, 190, 197, 0.4);
 }
 
-.userCardBtn:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(64, 224, 208, 0.3);
+/* Yetki bölümü için stil */
+.userCardModal > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid #e0f7fa;
+  border-bottom: 1px solid #e0f7fa;
+  margin: 15px 0;
 }
 
-/* Silme butonu için özel stil */
-.userCardContanier > div:last-child .userCardBtn {
-  background: linear-gradient(to right, #ff6b6b, #ee5a52);
-  box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+.userCardModal label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
 }
 
-.userCardContanier > div:last-child .userCardBtn:hover {
-  background: linear-gradient(to right, #ee5a52, #dd4a42);
-  box-shadow: 0 5px 12px rgba(255, 107, 107, 0.4);
+.f3{
+  flex: 3;
+}
+.f2{
+  flex: 2;
 }
 
-/* SweetAlert Özelleştirmeleri */
-.swal-confirm-button {
-  background: linear-gradient(to right, #40e0d0, #38c9ba) !important;
-  border: none !important;
-  border-radius: 6px !important;
-  padding: 10px 20px !important;
-  box-shadow: 0 3px 8px rgba(64, 224, 208, 0.3) !important;
-}
-
-.swal-confirm-button:hover {
-  background: linear-gradient(to right, #38c9ba, #2abeb0) !important;
-  box-shadow: 0 5px 12px rgba(64, 224, 208, 0.4) !important;
-}
-
-.swal-cancel-button {
-  background: linear-gradient(to right, #b0bec5, #90a4ae) !important;
-  border: none !important;
-  border-radius: 6px !important;
-  padding: 10px 20px !important;
-  box-shadow: 0 3px 8px rgba(176, 190, 197, 0.3) !important;
-}
-
-.swal-cancel-button:hover {
-  background: linear-gradient(to right, #90a4ae, #78909c) !important;
-  box-shadow: 0 5px 12px rgba(176, 190, 197, 0.4) !important;
-}
-
-/* Silme butonu için özel SweetAlert stili */
-.swal-button--danger {
-  background: linear-gradient(to right, #ff6b6b, #ee5a52) !important;
-  border: none !important;
-  border-radius: 6px !important;
-  box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3) !important;
-}
-
-.swal-button--danger:hover {
-  background: linear-gradient(to right, #ee5a52, #dd4a42) !important;
-  box-shadow: 0 5px 12px rgba(255, 107, 107, 0.4) !important;
+/* Animasyonlar */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Responsive Tasarım */
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
   .userCardContanier {
+    flex-wrap: wrap;
     gap: 10px;
   }
   
-  .userCardBtn {
+  .userCardInfo {
+    flex: 1 0 45%;
+    font-size: 13px;
+  }
+  
+  .userCardModal {
+    padding: 20px;
+    width: 320px;
+  }
+  
+  .userCardModalBtn {
     padding: 10px 12px;
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 
-@media (max-width: 992px) {
-  .userCardContanier {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .userCardContanier > div {
-    flex: 1 0 auto !important;
-    margin-bottom: 10px;
-  }
-  
+@media (max-width: 480px) {
   .userCard {
     padding: 15px;
   }
-}
-
-@media (max-width: 768px) {
-  .userCardSelect {
-    padding: 8px 12px;
-    font-size: 14px;
+  
+  .userCardInfo {
+    flex: 1 0 100%;
+    text-align: center;
   }
   
-  .userCardBtn {
-    padding: 10px;
-    font-size: 13px;
+  .userCardModal {
+    padding: 15px;
+  }
+  
+  .userCardModal h4 {
+    font-size: 18px;
+  }
+  
+  .userCardModal > div {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .userCardSelect {
+    margin-left: 0;
+    width: 100%;
   }
 }

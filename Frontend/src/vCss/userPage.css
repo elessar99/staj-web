@@ -1,0 +1,47 @@
+.userPageContainer {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+    padding: 32px 24px;
+    color: #111;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.userPageTitle {
+    text-align: left;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.userPageInfo {
+    text-align: left;
+    width: 500px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.userInfoLine {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.userInfoLineTitle{
+    font-weight: 600;
+    margin-right: 8px;
+    width: 120px;
+}
+.userInfoLineItem {
+    flex: 1;
+    margin-right: 8px;
+}
+.userInfoLineBtn{
+    background-color: #3fddcd;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}

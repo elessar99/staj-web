@@ -9,8 +9,13 @@ import AddToProject from "../components/popup/AddToProject";
 import RemoveSitesFromUser from "../components/popup/removeSitesFromUser";
 import AddSitesToUser from "../components/popup/addSitesToUser";
 
-const NotUserCard = ({userId, userName="name", email="mail", isAdmin=false, permissions=[{project:"id",sites:[]}]}) => {
+const NotUserCard = ({userId, userName="name", department="department", position="position", sicilNo="00000",  email="mail", isAdmin=false, permissions=[{project:"id",sites:[]}]}) => {
     const [authority, setAuthority] = useState(isAdmin);
+    const [showModal, setShowModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showRemoveModal, setShowRemoveModal] = useState(false);
+    const [showAddSitesModal, setShowAddSitesModal] = useState(false);
+    const [showRemoveSitesModal, setShowRemoveSitesModal] = useState(false);
 
     const confirmUser = async () => {
         try {
@@ -38,6 +43,7 @@ const NotUserCard = ({userId, userName="name", email="mail", isAdmin=false, perm
             Swal.fire('Hata!', errorMessage, 'error');
         }
     };
+
     
     const handleAuthorityChange = async (newAuthority) => {
         // Boolean değere çevir (select'ten string geliyor)
@@ -196,56 +202,61 @@ const handleDeleteUser = async () => {
 };
 
     return (
-      <>
-        <div className="userCard">
+        <>
+          <div className="userCard">
             <div className="userCardContanier">
-                <div className="userCardName" style={{flex:1}}>
-                    {userName}
-                </div>
-                <div className="userCardName" style={{flex:1}}>
-                    {email}
-                </div>
-                <div className="userCardName" style={{flex:1}}>
-                    {userId}
-                </div>
-                <div className="authorityChange" style={{flex:1}}>
-                    <select 
-                        className="userCardSelect"
-                        value={authority} 
-                        onChange={(e) => handleAuthorityChange(e.target.value)}
-                    >
-                        <option className="adminOption" value={true}>Admin</option>
-                        <option className="userOption" value={false}>User</option>
-                    </select>
-                </div>
-                <div className="userCardBtn" style={{flex:1}} onClick={confirmUser}>
-                    Confirm User
-                </div>
-                <div className="userCardBtn" style={{flex:1}} onClick={handleDeleteUser}>
-                    Delete User
-                </div>
+              <div className="userCardInfo">{userName}</div>
+              <div className="userCardInfo">{email}</div>
+              <div className="userCardInfo">{department}</div>
+              <div className="userCardInfo">{position}</div>
+              <div className="userCardInfo">{sicilNo}</div>
+              {/* 3 nokta butonu */}
+              <div className="userCardMoreBtn" onClick={() => setShowModal(true)}>
+                <span style={{ fontSize: "2rem", cursor: "pointer" }}>⋮</span>
+              </div>
             </div>
-        </div>
-      </>
+          </div>
+
+          {/* Modal */}
+          {showModal && (
+            <div className="userCardModalOverlay" onClick={() => setShowModal(false)}>
+              <div className="userCardModal" onClick={e => e.stopPropagation()}>
+                <h4>{userName} İşlemleri</h4>
+                <button className="userCardModalBtn" onClick={confirmUser}>Confirm User</button>
+                <button className="userCardModalBtn" onClick={handleDeleteUser}>Delete User</button>
+                <div style={{ margin: "12px 0" }}>
+                  <label style={{ fontWeight: 500 }}>Yetki:</label>
+                  <select
+                    className="userCardSelect"
+                    value={authority}
+                    onChange={(e) => handleAuthorityChange(e.target.value)}
+                    style={{ marginLeft: 8 }}
+                  >
+                    <option value={true}>Admin</option>
+                    <option value={false}>User</option>
+                  </select>
+                </div>
+                <button className="userCardModalClose" onClick={() => setShowModal(false)}>Kapat</button>
+              </div>
+            </div>
+          )}
+
+          {/* Diğer popup'lar */}
+          {showAddModal && (
+            <AddToProject userId={userId} onClose={() => setShowAddModal(false)} />
+          )}
+          {showRemoveModal && (
+            <RemoveFromProject userId={userId} onClose={() => setShowRemoveModal(false)} />
+          )}
+          {showAddSitesModal && (
+            <AddSitesToUser userId={userId} onClose={() => setShowAddSitesModal(false)} />
+          )}
+          {showRemoveSitesModal && (
+            <RemoveSitesFromUser userId={userId} onClose={() => setShowRemoveSitesModal(false)} />
+          )}
+        </>
     );
 };
 
-NotUserCard.propTypes = {
-    userId: PropTypes.string.isRequired,
-    userName: PropTypes.string,
-    email: PropTypes.string,
-    isAdmin: PropTypes.bool,
-    permissions: PropTypes.arrayOf(PropTypes.shape({
-        project: PropTypes.string,
-        sites: PropTypes.arrayOf(PropTypes.string)
-    }))
-};
-
-NotUserCard.defaultProps = {
-    userName: "İsimsiz Kullanıcı",
-    email: "email@example.com",
-    isAdmin: false,
-    permissions: []
-};
 
 export default NotUserCard;

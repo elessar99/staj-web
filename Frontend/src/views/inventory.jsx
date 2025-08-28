@@ -10,18 +10,73 @@ const Inventory = () => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState("")
     const [clearInventory, setClearInventory] = useState([])
+    const [selectStatus, setSelectStatus] = useState("all")
+    const [selectDevice, setSelectDevice] = useState("all")
+    const [category, setCategory] = useState("all")
     const { siteId } = useParams(); 
     const inventories = useSelector((state) => state.inventories || []);
     const [inventoryName, setInventoryName] = useState("");
     const [inventoryLink, setInventoryLink] = useState("");
     const [productSerialNumber, setProductSerialNumber] = useState("");
-    const [inventoryDevice, setInventoryDevice] = useState("");
+    const [inventoryDevice, setInventoryDevice] = useState("server");
     const [inventoryLocation, setInventoryLocation] = useState("");
     const [inventoryStatus, setInventoryStatus] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [addItem, setAddItem] = useState(false);
     const [uploadExcel, setUploadExcel] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0);
+
+    const searchFunction = () => {
+        let filteredList = [];
+        if (search) {
+            const searchLower = search.toLocaleLowerCase('tr').trim();
+            if (category=="all" || category===null){
+                const filtered = inventories.filter(item => {
+                    return item.name.toLocaleLowerCase('tr').includes(searchLower) ||
+                           item.location.toLocaleLowerCase('tr').includes(searchLower) ||
+                           item.productSerialNumber.toLocaleLowerCase('tr').includes(searchLower) ||
+                           item.link.toLocaleLowerCase('tr').includes(searchLower);
+                });
+                filteredList = filtered;
+            }else if(category=="name"){
+                const filtered = inventories.filter(item => {
+                    return item.name.toLocaleLowerCase('tr').includes(searchLower);
+                });
+                filteredList = filtered;
+            }else if(category=="location"){
+                const filtered = inventories.filter(item => {
+                    return item.location.toLocaleLowerCase('tr').includes(searchLower);
+                });
+                filteredList = filtered;
+            }else if(category=="PSN"){
+                const filtered = inventories.filter(item => {
+                    return item.productSerialNumber.toLocaleLowerCase('tr').includes(searchLower);
+                });
+                filteredList = filtered;
+            }else if(category=="link"){
+                const filtered = inventories.filter(item => { 
+                    return item.link.toLocaleLowerCase('tr').includes(searchLower);
+                });
+                filteredList = filtered;
+            }
+        } else {                          
+            filteredList = inventories;
+        }
+        if (selectStatus != "all"){
+            const filtered = filteredList.filter(item => item.status === selectStatus);
+            filteredList = filtered;
+        }
+        if (selectDevice != "all"){
+            const filtered = filteredList.filter(item => item.device === selectDevice);
+            filteredList = filtered;
+        }
+        setClearInventory(filteredList);
+    }
+
+    
+    useEffect(() => {
+        searchFunction();
+    }, [search, inventories, category, selectStatus, selectDevice]);
 
     const handleChangeAddItem = () => {
         setAddItem(!addItem);
@@ -32,26 +87,6 @@ const Inventory = () => {
         setUploadExcel(!uploadExcel);
         if (addItem) setAddItem(false);
     };
-
-    useEffect(() => {
-        if (search) {
-            const searchLower = search.toLocaleLowerCase('tr');
-            
-            const filtered = inventories.filter(item => {
-            // Tüm string özelliklerde arama yap
-            return Object.values(item).some(value => {
-                if (typeof value === 'string') {
-                return value.toLocaleLowerCase('tr').includes(searchLower);
-                }
-                return false;
-            });
-            });
-
-            setClearInventory(filtered);
-        } else {
-            setClearInventory(inventories);
-        }
-    }, [search, inventories]);
 
 
     const handleFileChange = (e) => {
@@ -178,8 +213,10 @@ const Inventory = () => {
                 {addItem && (<div className="addInventory">
                     <div className="inventoryAddBody">
                         <div className="inventoryInputBar">
-                            <input className="creatDeletInput" type="text" placeholder="Enter device name" 
-                            onChange={(e)=>{setInventoryDevice(e.target.value)}} value={inventoryDevice}/>
+                            <select name="device" id="device" className="inventoryInputBarSelect" onChange={(e)=>{setInventoryDevice(e.target.value)}} value={inventoryDevice}>
+                                <option value="server">Server</option>
+                                <option value="network">Network</option>
+                            </select>
                         </div>
                         <div className="inventoryInputBar">
                             <input className="creatDeletInput" type="text" placeholder="Enter name" 
@@ -210,15 +247,38 @@ const Inventory = () => {
                     <div className="createDeletBtn" onClick={handleUpload}>Upload Excel</div>
                 </div>)}
             </div>
-            <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
+            <div className="inventoryFilterBar">
+                <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
+                <select name="inputFilter" id="00" onChange={(e)=>{setCategory(e.target.value)}}>
+                    <option className="inputFilterOption" value="all">All</option>
+                    <option className="inputFilterOption" value="name">Name</option>
+                    <option className="inputFilterOption" value="location">Location</option>
+                    <option className="inputFilterOption" value="PSN">PSN</option>
+                    <option className="inputFilterOption" value="link">Link</option>
+                </select>
+            </div>
             <div className="inventoryHeader">
                 <div className="inventoryHeaderBar">
-                    <div className="inventoryHeaderItem flex1">Device</div>
+                    <div className="inventoryHeaderItem flex1">
+                        <select className="inventoryHeaderItemSelect" name="device" id="device" onChange={(e)=>{setSelectDevice(e.target.value)}}>
+                            <option className="inventoryHeaderItemOption" value="all">All</option>
+                            <option className="inventoryHeaderItemOption" value="server">Server</option>
+                            <option className="inventoryHeaderItemOption" value="network">network</option>
+                        </select>
+                    </div>
                     <div className="inventoryHeaderItem flex3">Name</div>
                     <div className="inventoryHeaderItem flex2">Link</div>
                     <div className="inventoryHeaderItem flex2">PSN</div>
                     <div className="inventoryHeaderItem flex1">Location</div>
-                    <div className="inventoryHeaderItem flex2">Status</div>
+                    <div className="inventoryHeaderItem flex2">
+                        <select className="inventoryHeaderItemSelect" name="status" id="status" onChange={(e)=>{setSelectStatus(e.target.value)}}>
+                            <option className="inventoryHeaderItemOption" value="all">All</option>
+                            <option className="inventoryHeaderItemOption" value="active">Active</option>
+                            <option className="inventoryHeaderItemOption" value="inactive">Inactive</option>
+                            <option className="inventoryHeaderItemOption" value="maintenance">Maintenance</option>
+                            <option className="inventoryHeaderItemOption" value="retired">Retired</option>
+                        </select>
+                    </div>
                     <div className="inventoryHeaderItem flex1">Actions</div>
                 </div>
             </div>

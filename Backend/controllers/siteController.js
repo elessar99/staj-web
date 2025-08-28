@@ -4,6 +4,7 @@ const Inventory = require("../models/Inventory");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
 const User = require("../models/User");
+const {createLog} = require("./logController");
 
 const getMissingSites = async (req, res) => {
   try {
@@ -164,6 +165,11 @@ const addSite = async (req, res) => {
         projectId: projectId
       });
       await site.save();
+      await createLog({
+        userId: userId,
+        action: "ADD_SITE",
+        details: `Site eklendi: ${site._id} - ${site.name}`
+      });
       return res.json(site);
     }
 
@@ -182,10 +188,16 @@ const addSite = async (req, res) => {
       name: name,
       projectId: projectId
     });
-
+    
+    console.log("Site eklendi:", site);
     await site.save();
+    console.log("Site eklendi:", site);
+    await createLog({
+      userId: userId, 
+      action: "ADD_SITE", 
+      details: `Site eklendi: ${site._id} - ${site.name}`
+    });
     res.json(site);
-
   } catch (error) {
     console.error('Error in addSite:', error);
     res.status(500).json({ success: false, message: error.message });
@@ -194,6 +206,7 @@ const addSite = async (req, res) => {
 
 const deleteSite = async (req, res) => {
   try {
+    const userId = req.userId;
     const siteId = req.params.id;
 
     // 1. Önce siteye ait tüm envanterleri sil
@@ -206,6 +219,12 @@ const deleteSite = async (req, res) => {
       return res.status(404).json({ message: "Site not found" });
     }
 
+    await createLog({
+      userId: userId, 
+      action: "DELETE_SITE", 
+      details: `Site silindi: ${deletedSite._id} - ${deletedSite.name}`
+    });
+    
     res.json({ 
       message: "Site and all its inventories deleted successfully",
       deletedSite
