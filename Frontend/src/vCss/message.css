@@ -107,6 +107,11 @@
   overflow-y: auto;
 }
 
+.receivedMessagesCard{
+  display: flex;
+  align-items: center;
+}
+
 .messageItem {
   display: flex;
   background: white;
@@ -117,6 +122,9 @@
   transition: all 0.3s ease;
   border-left: 4px solid #40e0d0;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+.receivedItem{
+  width: 100%;
 }
 
 .messageItem:hover {
@@ -172,6 +180,30 @@
 .readStatus.unread {
   background: linear-gradient(to right, #ffebee, #ffcdd2);
   color: #c62828;
+}
+.messageDateBtn {
+  background: linear-gradient(to right, #ff4b5c, #ff6f61);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(255, 75, 92, 0.3);
+  width: 100px;
+  height: 18px;
+  margin:0px 0px 15px 10px;
+}
+.messageDateBtn:hover {
+  background: linear-gradient(to right, #ff6f61, #ff4b5c);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(255, 75, 92, 0.4);
+}
+.messageDateBtn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(255, 75, 92, 0.3);
 }
 
 /* Popup Stilleri */

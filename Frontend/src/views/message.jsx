@@ -61,6 +61,24 @@ const Message = () => {
     }
   };
 
+  const handleDeleteMessage = async (messageId, isRead) => {
+    try {
+      if (!isRead) {
+        alert("You can only delete read messages.");
+        return;
+      }
+      await axios.delete(`http://localhost:5000/api/messages/${messageId}`, {
+        withCredentials: true,
+        credentials: 'include'
+      });
+      // Mesaj silindikten sonra mesajları yeniden getir
+      getMessageswithUser();
+    } catch (error) {
+      console.error("Mesaj silinirken hata:", error);
+      alert("Mesaj silinirken hata oluştu.");
+    }
+  };
+
   // Boş fonksiyon - içine sen backend isteğini yazabilirsin
   const markAsRead = async (messageId) => {
     try {
@@ -127,9 +145,10 @@ const Message = () => {
           <div className="receivedMessages">
             {messages.receivedMessages &&
               messages.receivedMessages.map((msg) => (
+                <div className="receivedMessagesCard">
                 <div
                   key={msg._id}
-                  className="messageItem"
+                  className="messageItem receivedItem"
                   onClick={() => handleSelectMessage(msg)}
                 >
                   <div className="receivedMessagesTitle">{msg.title}</div>
@@ -138,10 +157,14 @@ const Message = () => {
                     {new Date(msg.timestamp).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" })}
                   </div>
                   {msg.read ? (
+                    <>
                     <div className="readStatus read">Read</div>
+                    </>
                   ) : (
                     <div className="readStatus unread">Unread</div>
                   )}
+                </div>
+                <div className="messageDateBtn" onClick={()=> {handleDeleteMessage(msg._id, msg.read)}}>delete</div>
                 </div>
               ))}
           </div>

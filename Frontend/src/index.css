@@ -54,6 +54,27 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #40e0d0, #38c9ba);
+  border-radius: 8px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #38c9ba, #2abeb0);
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -66,3 +87,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+

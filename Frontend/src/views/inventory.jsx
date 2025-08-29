@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import InventoryCard from "../cards/inventoryCard";
 import "./inventory.css";
 import SearchBar from "../components/SearchBar";
+import { exportToExcel } from "../utils/exportToExcel";
 
 const Inventory = () => {
     const dispatch = useDispatch();
@@ -25,6 +26,18 @@ const Inventory = () => {
     const [addItem, setAddItem] = useState(false);
     const [uploadExcel, setUploadExcel] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0);
+
+    const handleExport = () => {
+        const formattedData = inventories.map((item) => ({
+            Device: item.device,
+            Name: item.name,
+            Link: item.link,
+            PSN: item.productSerialNumber,
+            Location: item.location,
+            Status: item.status,
+        }));
+        exportToExcel(formattedData, "inventory.xlsx");
+    };
 
     const searchFunction = () => {
         let filteredList = [];
@@ -208,6 +221,7 @@ const Inventory = () => {
             <div className="inventoryHeaderBar">
                 <div className="inventoryAddBtn" onClick={handleChangeAddItem}>Add Item</div>
                 <div className="inventoryAddBtn" onClick={handleChangeUploadExcel}>Upload Excel</div>
+                <div className="inventoryAddBtn" onClick={handleExport}>Export Excel</div>
             </div>
             <div className="navBar">
                 {addItem && (<div className="addInventory">

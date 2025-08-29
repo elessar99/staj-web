@@ -15,7 +15,7 @@ root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor} loading={<div>...</div>}>
       <BrowserRouter>
-        <App />
+        <App  />
       </BrowserRouter>
     </PersistGate>
   </Provider>
