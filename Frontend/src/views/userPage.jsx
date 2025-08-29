@@ -17,6 +17,14 @@ const UserPage = () => {
   const [receivedMessage, setReceivedMessage] = useState(false);
   const [messageTitle, setMessageTitle] = useState("");
   const [messageText, setMessageText] = useState("");
+
+  const counterUnReadMessages = (messages) => {
+    let count = 0;
+    messages.forEach((msg) => {
+      if (!msg.read) count++;
+    });
+    return count;
+  }
   
   const markAsRead = async (messageId) => {
     try {
@@ -29,7 +37,7 @@ const UserPage = () => {
     }
   };
 
-    const handleSendMessage = async (userId) => {
+  const handleSendMessage = async (userId) => {
     try {
       await axios.post(
         "http://localhost:5000/api/messages",
@@ -49,6 +57,24 @@ const UserPage = () => {
     } catch (error) {
       console.error("Error sending message:", error);
       alert("Failed to send message.");
+    }
+  };
+
+  const handleDeleteMessage = async (messageId, isRead) => {
+    try {
+      if (!isRead) {
+        alert("You can only delete read messages.");
+        return;
+      }
+      await axios.delete(`http://localhost:5000/api/messages/${messageId}`, {
+        withCredentials: true,
+        credentials: 'include'
+      });
+      // Mesaj silindikten sonra mesajları yeniden getir
+      fetchingMessages();
+    } catch (error) {
+      console.error("Mesaj silinirken hata:", error);
+      alert("Mesaj silinirken hata oluştu.");
     }
   };
 
@@ -167,15 +193,16 @@ const UserPage = () => {
               setReceivedMessage(!receivedMessage);
             }}
           >
-            Received Messages
+            Received Messages - {counterUnReadMessages(messages.receivedMessages || [])}
           </div>
           {receivedMessage && (
             <div className="receivedMessages">
               {messages.receivedMessages &&
                 messages.receivedMessages.map((msg) => (
+                  <div className="receivedMessagesCard">
                   <div
                     key={msg._id}
-                    className="messageItem"
+                    className="messageItem receivedItem"
                     onClick={() => handleSelectMessage(msg)}
                   >
                     <div className="receivedMessagesTitle">{msg.title}</div>
@@ -188,6 +215,8 @@ const UserPage = () => {
                     ) : (
                       <div className="readStatus unread">Unread</div>
                     )}
+                  </div>
+                  <div className="messageDateBtn" onClick={()=> {handleDeleteMessage(msg._id, msg.read)}}>delete</div>
                   </div>
                 ))}</div>
                 )}

@@ -15,6 +15,12 @@ const Authorization = () => {
   const [users, setUsers] = useState([])
   const [noneVerifiedUsers, setNoneVerifiedUsers] = useState([])
 
+  const [responseMessage, setResponseMessage] = useState(null);
+  const [messageText, setMessageText] = useState("");
+  const [messageTitle, setMessageTitle] = useState("");
+  const [receivedMessage, setReceivedMessage] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [selectedMsg, setSelectedMsg] = useState(null);
@@ -24,7 +30,73 @@ const Authorization = () => {
   const [sicilNo, setSicilNo] = useState(null)
   const [position, setPosition] = useState(null)
 
-  const dispatch = useDispatch();
+
+  const counterUnReadMessages = (messages) => {
+    let count = 0;
+    messages.forEach((msg) => {
+      if (!msg.read) count++;
+    });
+    return count;
+  }
+
+  const markAsRead = async (messageId) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/messages/read/${messageId}`, {}, {
+        withCredentials: true,
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.log("Mesaj okunamadı:", error);
+    }
+  };
+
+  const handleSelectMessage = (msg) => {
+    setSelectedMessage(msg);
+    if (!msg.read ) {
+      markAsRead(msg._id);
+    }
+  };
+
+    const handleSendMessage = async (userId) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/messages",
+        {
+          toUserId: userId,
+          content: messageText,
+          title: messageTitle,
+        },
+        {
+          withCredentials: true,
+          credentials: "include",
+        }
+      );
+      alert("Message sent successfully!");
+      setMessageTitle("");
+      setMessageText("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Failed to send message.");
+    }
+  };
+
+  const handleDeleteMessage = async (messageId, isRead) => {
+    try {
+      if (!isRead) {
+        alert("You can only delete read messages.");
+        return;
+      }
+      await axios.delete(`http://localhost:5000/api/messages/${messageId}`, {
+        withCredentials: true,
+        credentials: 'include'
+      });
+      // Mesaj silindikten sonra mesajları yeniden getir
+      fetchingMessages();
+    } catch (error) {
+      console.error("Mesaj silinirken hata:", error);
+      alert("Mesaj silinirken hata oluştu.");
+    }
+  };
 
   const fetchingData = async () => {
     try {
@@ -42,8 +114,24 @@ const Authorization = () => {
       console.error("Error fetching user data:", error);
     }
   };
+
+    const fetchingMessages = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/messages', {
+        withCredentials: true,
+        credentials: 'include'
+      });
+      setMessages(response.data || []);
+      console.log(response.data)
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+
+
   useEffect(() => {
     fetchingData();
+    fetchingMessages();
   }, []);
 
   const handleMsgClick = (msg) => setSelectedMsg(msg);
@@ -100,7 +188,7 @@ const Authorization = () => {
 
   useEffect(() => {
     if (search) {
-        const searchLower = search.toLocaleLowerCase('tr');
+        const searchLower = search.toLocaleLowerCase('tr').trim();
         
         const filtered = users.filter(item => {
         // Tüm string özelliklerde arama yap
@@ -161,8 +249,45 @@ if (!user) return <div>Yükleniyor...</div>;
         </div>
     </div>
 
+        <div>
+                    {/* Gelen Mesajlar */}
+          <div
+            className="MessagesBtn"
+            onClick={() => {
+              setReceivedMessage(!receivedMessage);
+            }}
+          >
+            Received Messages - {counterUnReadMessages(messages.receivedMessages || [])}
+          </div>
+          {receivedMessage && (
+            <div className="receivedMessages">
+              {messages.receivedMessages &&
+                messages.receivedMessages.map((msg) => (
+                  <div className="receivedMessagesCard">
+                  <div
+                    key={msg._id}
+                    className="messageItem receivedItem"
+                    onClick={() => handleSelectMessage(msg)}
+                  >
+                    <div className="receivedMessagesTitle">{msg.title}</div>
+                    <div className="receivedMessageContent">Mesajı görmek için tıklayın</div>
+                    <div className="messageDate">
+                      {new Date(msg.timestamp).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" })}
+                    </div>
+                    {msg.read ? (
+                      <div className="readStatus read">Read</div>
+                    ) : (
+                      <div className="readStatus unread">Unread</div>
+                    )}
+                  </div>
+                  <div className="messageDateBtn" onClick={()=> {handleDeleteMessage(msg._id, msg.read)}}>delete</div>
+                  </div>
+                ))}</div>
+                )} 
+          </div>
 
-        <div className="userVerificationBtn" onClick={toggleUserVerification}>User Verification</div>
+
+        <div className="userVerificationBtn" onClick={toggleUserVerification}>User Verification - {noneVerifiedUsers.length }</div>
           {userVerificationBtn && (<div>
                 <div className="userListHeadrer">
                   <div className="userListHeadrerItem">Name</div>
@@ -181,7 +306,7 @@ if (!user) return <div>Yükleniyor...</div>;
                   <p style={{color:"black"}}>No unapproved users found</p>
               )}
         </div>)}
-        <div className="userListBtn" onClick={toggleUserList}>User List</div>
+        <div className="userListBtn" onClick={toggleUserList}>User List - {clearUserList.length}</div>
         {userListBtn && (
           <div style={{marginTop:"20px"}}>
               <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
@@ -202,6 +327,63 @@ if (!user) return <div>Yükleniyor...</div>;
                   <p style={{color:"black"}}>No users found</p>
               )}
         </div>)}
+        {/* Popup (Modal) */}
+      {selectedMessage && (
+        <div className="messagePopupOverlay" onClick={() => setSelectedMessage(null)}>
+          <div className="messagePopup" onClick={(e) => e.stopPropagation()}>
+            <h3 className="popupTitle">{selectedMessage.title}</h3>
+            <p className="popupContent">{selectedMessage.content}</p>
+            <div className="popupDate">
+              {new Date(selectedMessage.timestamp).toLocaleString("tr-TR", {
+                timeZone: "Europe/Istanbul",
+              })}
+            </div>
+            <div className="popupStatus">
+              {selectedMessage.read ? "Okundu" : "Okunmadı"}
+            </div>
+            {(user._id === selectedMessage.to)? (<button className="popupCloseBtn" onClick={() => {
+              setResponseMessage(selectedMessage)
+              setMessageTitle("Re: "+selectedMessage.title)
+              setSelectedMessage(null)
+            }}>
+              Response Message
+            </button>):<button className="popupCloseBtn" onClick={() => setSelectedMessage(null)}>
+              Delete Message
+            </button>}
+            <button className="popupCloseBtn" onClick={() => setSelectedMessage(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {responseMessage && (
+        <div className="messagePopupOverlay" onClick={() => {
+          setResponseMessage(null)
+          setMessageText("")
+          setMessageTitle("")
+          }}>
+          <div className="sendMessageForm" style={{color:"black"}} onClick={(e) => e.stopPropagation()}>
+            <div className="sendMessageTitle" style={{color:"black"}}>Send Response Message</div>
+            <div className="messageTitleInput">{messageTitle}</div>
+            <textarea
+              placeholder="Type your message here..."
+              className="messageTextArea"
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              rows={10}
+              cols={50}
+            />
+            <button
+              type="button"
+              className="sendMessageBtn"
+              onClick={()=>{handleSendMessage(responseMessage.from)}}
+            >
+              Send Message
+              {responseMessage.from}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

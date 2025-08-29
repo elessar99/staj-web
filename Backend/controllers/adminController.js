@@ -112,7 +112,7 @@ const addProjectToUser = async (req, res) => {
     await user.save();
     await createLog({
       userId: req.userId,
-      action: "User_Include",
+      action: "USER_INCLUDE",
       details: `Kullanıcıya proje eklendi: ${user._id} - Proje ID: ${req.body.projectId}`
     });
     res.json(user);
@@ -138,7 +138,7 @@ const addSitesToUser = async (req, res) => {
     await user.save();
     await createLog({
       userId: req.userId,
-      action: "User_Include",
+      action: "USER_INCLUDE",
       details: `Kullanıcıya siteler eklendi: ${user._id} - Proje ID: ${req.body.projectId} - Siteler: ${req.body.sites.join(", ")}`
     });
     res.json(user);
@@ -161,7 +161,7 @@ const removeProjectFromUser = async (req, res) => {
     await user.save();
     await createLog({
       userId: req.userId,
-      action: "User_Exclude",
+      action: "USER_EXCLUDE",
       details: `Kullanıcıdan proje silindi: ${user._id} - Proje ID: ${req.body.projectId}`
     });
     res.json(user);
@@ -187,7 +187,7 @@ const removeSitesFromUser = async (req, res) => {
     await user.save();
     await createLog({
       userId: req.userId,
-      action: "User_Exclude",
+      action: "USER_EXCLUDE",
       details: `Kullanıcıdan siteler silindi: ${user._id} - Proje ID: ${req.body.projectId} - Siteler: ${req.body.sites.join(", ")}`
     });
     res.json(user);

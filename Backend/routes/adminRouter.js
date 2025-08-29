@@ -4,6 +4,8 @@ const { getUsers, deleteUser, changeAuthority,
     addSitesToUser, removeSitesFromUser,
     getNoneVerifiedUsers, userVerification,
     } = require("../controllers/adminController");
+
+const { getAllLogs, getUserLogs, getActionLogs, createLogEndpoint } = require("../controllers/logController");
 const router = express.Router();
 const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
 
@@ -25,6 +27,12 @@ router.post("/removeSites/:userId", authMiddleware, adminMiddleware, removeSites
 router.get("/noneVerifiedUsers", authMiddleware, adminMiddleware, getNoneVerifiedUsers);
 
 router.post("/confirmUser/:userId", authMiddleware, adminMiddleware, userVerification);
+
+router.get("/logs", authMiddleware, adminMiddleware, getAllLogs);
+
+router.get("/logs/user/:userId", authMiddleware, adminMiddleware, getUserLogs);
+
+router.get("/logs/action/:action", authMiddleware, adminMiddleware, getActionLogs);
 
 
 module.exports = router;

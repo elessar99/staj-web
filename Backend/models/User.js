@@ -46,6 +46,7 @@ const UserSchema = new mongoose.Schema({
   accountTerminatedDate: {
     type: Date,
     default: null,
+    index: { expires: 0 } 
   },
   logs: [{
     type: mongoose.Schema.Types.ObjectId,

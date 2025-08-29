@@ -8,6 +8,7 @@ import RemoveFromProject from "../components/popup/RemoveFromProject";
 import AddToProject from "../components/popup/AddToProject";
 import RemoveSitesFromUser from "../components/popup/removeSitesFromUser";
 import AddSitesToUser from "../components/popup/addSitesToUser";
+import UserLogs from "../components/popup/userLogs";
 
 const UserCard = ({userId, userName="name", department="department", position="position", sicilNo="00000",  email="mail", isAdmin=false, permissions=[{project:"id",sites:[]}]}) => {
     const [authority, setAuthority] = useState(isAdmin);
@@ -16,6 +17,22 @@ const UserCard = ({userId, userName="name", department="department", position="p
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [showAddSitesModal, setShowAddSitesModal] = useState(false);
     const [showRemoveSitesModal, setShowRemoveSitesModal] = useState(false);
+    const [showLogsPopup, setShowLogsPopup] = useState(false);
+    const [userLogs, setUserLogs] = useState([]);
+
+    const fetchUserLogs = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/admin/logs/user/${userId}`, {
+        withCredentials: true,
+        credentials: 'include'
+      });
+      setUserLogs(response.data || []);
+      setShowLogsPopup(true);
+      console.log("logs:",response.data);
+    } catch (error) {
+      console.error("Error fetching user logs:", error);
+    }
+  };
 
     const handleMessageOpen = () => {
       // Mesajlar sayfasına yönlendirme işlemi
@@ -216,7 +233,7 @@ const handleDeleteUser = async () => {
                     <option value={false}>User</option>
                   </select>
                 </div>
-                <button className="userCardModalBtn" onClick={() => { /* User Logs aç */ }}>User Logs</button>
+                <button className="userCardModalBtn" onClick={() => {fetchUserLogs(userId)}}>User Logs</button>
                 <button className="userCardModalBtn" onClick={handleMessageOpen}>Messages</button>
                 <button className="userCardModalClose" onClick={() => setShowModal(false)}>Kapat</button>
               </div>
@@ -224,6 +241,9 @@ const handleDeleteUser = async () => {
           )}
 
           {/* Diğer popup'lar */}
+          {showLogsPopup && (
+            <UserLogs logs={userLogs.logs} onClose={() => setShowLogsPopup(false)} />
+          )}
           {showAddModal && (
             <AddToProject userId={userId} onClose={() => setShowAddModal(false)} />
           )}

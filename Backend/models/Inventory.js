@@ -45,6 +45,8 @@ const InventorySchema = new mongoose.Schema({
     enum: ['active', 'inactive', 'maintenance'],
     default: 'inactive',
   },
+  lisansStartDate: { type: Date },
+  lisansEndDate: { type: Date },
   siteId: { type: mongoose.Schema.Types.ObjectId, ref: "Site" },
 },
 {
