@@ -48,15 +48,6 @@ const updateUser = async (req, res) => {
   }
 }
 
-const scheduleUserDeletion = async (userId, days) => {
-  // days: Kaç gün sonra silinsin
-  const now = new Date();
-  const deleteAt = new Date(now.getTime() + days * 24 * 60 * 60 * 1000); // gün cinsinden ileri tarih
 
-  await User.findByIdAndUpdate(userId, {
-    accountTerminatedDate: deleteAt, // isteğe bağlı, silme işlemi başlatıldı
-  });
-  return { success: true, message: `${days} gün sonra kullanıcı otomatik silinecek.` };
-};
 
 module.exports = {getUser,getUserById, updateUser};

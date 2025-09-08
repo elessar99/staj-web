@@ -3,6 +3,7 @@ const { getUsers, deleteUser, changeAuthority,
     addProjectToUser , removeProjectFromUser,
     addSitesToUser, removeSitesFromUser,
     getNoneVerifiedUsers, userVerification,
+    scheduleUserDeletion,
     } = require("../controllers/adminController");
 
 const { getAllLogs, getUserLogs, getActionLogs, createLogEndpoint } = require("../controllers/logController");
@@ -34,5 +35,6 @@ router.get("/logs/user/:userId", authMiddleware, adminMiddleware, getUserLogs);
 
 router.get("/logs/action/:action", authMiddleware, adminMiddleware, getActionLogs);
 
+router.patch("/scheduleDeletion", authMiddleware, adminMiddleware, scheduleUserDeletion);
 
 module.exports = router;

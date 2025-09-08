@@ -18,12 +18,16 @@ const uploadExcel = async (req, res) => {
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber === 1) return; // başlığı atla
 
-      const [name, link, sn] = row.values.slice(1); // A, B, C sütunları
+      const [device, name, link, psn, lisansStartDate, lisansEndDate, location] = row.values.slice(1); // A, B, C sütunları
 
       rows.push({
+        device: device || "",
         name: name || "",
         link: link || "",
-        productSerialNumber: sn || "",
+        productSerialNumber: psn || "",
+        lisansStartDate: lisansStartDate ? new Date(lisansStartDate) : null,
+        lisansEndDate: lisansEndDate ? new Date(lisansEndDate) : null,
+        location: location || "",
         siteId: req.body.siteId || "manual", // frontend'den gelmeyebilir
       });
     });

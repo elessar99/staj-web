@@ -1,5 +1,23 @@
 const Log = require("../models/Log");
 const User = require("../models/User");
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail", // veya kendi SMTP sunucun
+  auth: {
+    user: "erden0652@gmail.com",
+    pass: "gwpy qzmx gond zadc"
+  }
+});
+
+const sendLogMail = async (subject, text, to = "erden0652@gmail.com") => {
+  await transporter.sendMail({
+    from: '"Log Uyarı" <erden0652@gmail.com>',
+    to,
+    subject,
+    text
+  });
+};
 
 // Yardımcı log oluşturma fonksiyonu (diğer controllerlar için)
 const createLog = async ({ userId, action, details }) => {
@@ -8,6 +26,15 @@ const createLog = async ({ userId, action, details }) => {
     const email = user ? user.email : "Unknown";
     const newLog = new Log({ userId, email, action, details });
     await newLog.save();
+    // Kritik aksiyonlar için mail gönder
+    const criticalActions = ["DELETE_USER", "DELETE_PROJECT", "DELETE_SITE", "ADD_SITE", "ADD_PROJECT"];
+    if (criticalActions.includes(action)) {
+      await sendLogMail(
+        `Kritik Aksiyon: ${action}`, 
+        `Kullanıcı: ${email}\nAksiyon: ${action}\nDetaylar: ${details}`);
+    }
+
+
     return newLog;
   } catch (err) {
     console.error("Log oluşturulurken hata:", err);
@@ -30,6 +57,7 @@ const createLogEndpoint = async (req, res) => {
 const getAllLogs = async (req, res) => {
   try {
     const logs = await Log.find();
+
     res.json({ logs });
   } catch (err) {   
     console.error("Loglar getirilirken hata:", err);

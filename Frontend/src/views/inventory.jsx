@@ -19,6 +19,8 @@ const Inventory = () => {
     const [inventoryName, setInventoryName] = useState("");
     const [inventoryLink, setInventoryLink] = useState("");
     const [productSerialNumber, setProductSerialNumber] = useState("");
+    const [lisansStartDate, setLisansStartDate] = useState("")
+    const [lisansEndDate, setLisansEndDate] = useState("")
     const [inventoryDevice, setInventoryDevice] = useState("server");
     const [inventoryLocation, setInventoryLocation] = useState("");
     const [inventoryStatus, setInventoryStatus] = useState("");
@@ -33,6 +35,8 @@ const Inventory = () => {
             Name: item.name,
             Link: item.link,
             PSN: item.productSerialNumber,
+            LisansStartDate: item.lisansStartDate ? new Date(item.lisansStartDate).toLocaleDateString('tr-TR') : '',
+            LisansEndDate: item.lisansEndDate ? new Date(item.lisansEndDate).toLocaleDateString('tr-TR') : '',
             Location: item.location,
             Status: item.status,
         }));
@@ -90,6 +94,11 @@ const Inventory = () => {
     useEffect(() => {
         searchFunction();
     }, [search, inventories, category, selectStatus, selectDevice]);
+
+    useEffect(() => {
+        const dateObj = new Date(lisansEndDate); // string'i Date objesine çevirir
+        console.log(dateObj)
+    }, [lisansEndDate]);
 
     const handleChangeAddItem = () => {
         setAddItem(!addItem);
@@ -176,10 +185,11 @@ const Inventory = () => {
                 name: inventoryName,
                 link: inventoryLink,
                 productSerialNumber: productSerialNumber,
+                lisansStartDate: new Date(lisansStartDate),
+                lisansEndDate: new Date(lisansEndDate),
                 location: inventoryLocation,
                 status: inventoryStatus,
                 siteId: siteId // useParams'tan gelen siteId
-
             },{
                 withCredentials: true,
                 credentials: 'include'
@@ -245,6 +255,14 @@ const Inventory = () => {
                             onChange={(e)=>{setProductSerialNumber(e.target.value)}} value={productSerialNumber}/>
                         </div>
                         <div className="inventoryInputBar">
+                            <input className="creatDeletInput" type="date" placeholder="Enter Lisans Start Date" 
+                            onChange={(e)=>{setLisansStartDate(e.target.value)}} value={lisansStartDate}/>
+                        </div>
+                        <div className="inventoryInputBar">
+                            <input className="creatDeletInput" type="date" placeholder="Enter Lisans End Date" 
+                            onChange={(e)=>{setLisansEndDate(e.target.value)}} value={lisansEndDate}/>
+                        </div>
+                        <div className="inventoryInputBar">
                             <input className="creatDeletInput" type="text" placeholder="Enter location" 
                             onChange={(e)=>{setInventoryLocation(e.target.value)}} value={inventoryLocation}/>
                         </div>
@@ -283,6 +301,8 @@ const Inventory = () => {
                     <div className="inventoryHeaderItem flex3">Name</div>
                     <div className="inventoryHeaderItem flex2">Link</div>
                     <div className="inventoryHeaderItem flex2">PSN</div>
+                    <div className="inventoryHeaderItem flex2">lisans Start</div>
+                    <div className="inventoryHeaderItem flex2">lisans End</div>
                     <div className="inventoryHeaderItem flex1">Location</div>
                     <div className="inventoryHeaderItem flex2">
                         <select className="inventoryHeaderItemSelect" name="status" id="status" onChange={(e)=>{setSelectStatus(e.target.value)}}>
@@ -299,7 +319,9 @@ const Inventory = () => {
             {clearInventory.length > 0 ? (
                 <div className="inventoryList">
                     {clearInventory.map((item) => (
-                        <InventoryCard key={item._id} device={item.device} name={item.name} link={item.link} productSerialNumber={item.productSerialNumber} location={item.location} status={item.status} _id={item._id}/>
+                        <InventoryCard key={item._id} device={item.device} name={item.name} link={item.link} 
+                        productSerialNumber={item.productSerialNumber} location={item.location} 
+                        status={item.status} _id={item._id} lisansStart={item.lisansStartDate} lisansEnd={item.lisansEndDate} />
                     ))}
                 </div>
             ) : (

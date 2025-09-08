@@ -34,6 +34,14 @@ const InventorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lisansStartDate: {
+    type: Date,
+    required: true,
+  },
+  lisansEndDate: {
+    type: Date,
+    required: true,
+  },
   location: {
     type: String,
     required: true,
@@ -42,11 +50,21 @@ const InventorySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'inactive', 'maintenance'],
+    enum: ['active', 'inactive', 'maintenance', "retired"],
     default: 'inactive',
   },
-  lisansStartDate: { type: Date },
-  lisansEndDate: { type: Date },
+  lisansStartDate: { 
+    type: Date,
+    required: true
+  },
+  lisansEndDate: { 
+    type: Date,
+    required: true
+  },
+  followerUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }],
   siteId: { type: mongoose.Schema.Types.ObjectId, ref: "Site" },
 },
 {

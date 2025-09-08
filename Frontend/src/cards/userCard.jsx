@@ -19,6 +19,7 @@ const UserCard = ({userId, userName="name", department="department", position="p
     const [showRemoveSitesModal, setShowRemoveSitesModal] = useState(false);
     const [showLogsPopup, setShowLogsPopup] = useState(false);
     const [userLogs, setUserLogs] = useState([]);
+    const [scheduleUserDeletion, setscheduleUserDeletion] = useState(false)
 
     const fetchUserLogs = async (userId) => {
     try {
@@ -34,10 +35,37 @@ const UserCard = ({userId, userName="name", department="department", position="p
     }
   };
 
-    const handleMessageOpen = () => {
-      // Mesajlar sayfasına yönlendirme işlemi
-      window.location.href = `/messages/${userId}`;
-    };
+  const handleScheduleUserDeletion = async () => {
+    const { value: days } = await Swal.fire({
+      title: 'Kullanıcı Silme Planı',
+      input: 'number',
+      inputLabel: 'Kaç gün sonra silinsin?',
+      inputPlaceholder: 'Gün sayısı girin',
+      inputAttributes: {
+        min: 1,
+        step: 1
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Planla',
+      cancelButtonText: 'İptal',
+      icon: 'question'
+    });
+
+    if (days) {
+      try {
+        await axios.patch(
+          `http://localhost:5000/api/admin/scheduleDeletion/`,
+          { userId: userId,
+            days: Number(days) },
+          { withCredentials: true, credentials: 'include' }
+        );
+        Swal.fire('Başarılı!', `${days} gün sonra kullanıcı otomatik silinecek.`, 'success');
+      } catch (error) {
+        Swal.fire('Hata!', 'Silme planı oluşturulamadı.', 'error');
+        console.log(error);
+      }
+    }
+  };
     
     const handleAuthorityChange = async (newAuthority) => {
         // Boolean değere çevir (select'ten string geliyor)
@@ -234,12 +262,11 @@ const handleDeleteUser = async () => {
                   </select>
                 </div>
                 <button className="userCardModalBtn" onClick={() => {fetchUserLogs(userId)}}>User Logs</button>
-                <button className="userCardModalBtn" onClick={handleMessageOpen}>Messages</button>
+                <button className="userCardModalBtn" onClick={handleScheduleUserDeletion}>Schedule User Deletion</button>
                 <button className="userCardModalClose" onClick={() => setShowModal(false)}>Kapat</button>
               </div>
             </div>
           )}
-
           {/* Diğer popup'lar */}
           {showLogsPopup && (
             <UserLogs logs={userLogs.logs} onClose={() => setShowLogsPopup(false)} />

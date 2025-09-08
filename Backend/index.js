@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 require("dotenv").config();
+require("./cron/inventoryCron"); // Cron job'u başlat
 
 const projectRoutes = require("./routes/projectRoutes");
 const siteRoutes = require("./routes/siteRoutes");
@@ -13,7 +14,7 @@ const protectedRoutes = require("./routes/protectedRoutes");
 const filterRoutes = require("./routes/filterRoutes");
 const adminRoutes = require("./routes/AdminRouter");
 const userRoutes = require("./routes/userRouter");
-const messageRoutes = require("./routes/messageRouter");
+const notificationRoutes = require("./routes/notificationRouter");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -36,7 +37,7 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/protected", protectedRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/messages", messageRoutes);
+app.use("/api/notification", notificationRoutes);
 
 
 

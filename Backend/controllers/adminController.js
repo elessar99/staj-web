@@ -197,10 +197,25 @@ const removeSitesFromUser = async (req, res) => {
   }
 }
 
+const scheduleUserDeletion = async (req, res) => {
+  const userId = req.body.userId;
+  const days = req.body.days; // kaç gün sonra silinecek
+  // days: Kaç gün sonra silinsin
+  const now = new Date();
+  // const deleteAt = new Date(now.getTime() + days * 24 * 60 * 60 * 1000); // gün cinsinden ileri tarih
+  const deleteAt = new Date(now.getTime() + days * 60 * 1000); // gün cinsinden ileri tarih
+
+  await User.findByIdAndUpdate(userId, {
+    accountTerminatedDate: deleteAt, // isteğe bağlı, silme işlemi başlatıldı
+  });
+  return { success: true, message: `${days} gün sonra kullanıcı otomatik silinecek.` };
+};
+
 
 
 
 module.exports = {deleteUser, getUsers, changeAuthority,
     addProjectToUser, removeProjectFromUser, 
     addSitesToUser, removeSitesFromUser,
-    getNoneVerifiedUsers, userVerification, };
+    getNoneVerifiedUsers, userVerification,
+    scheduleUserDeletion };
