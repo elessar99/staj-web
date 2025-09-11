@@ -153,7 +153,8 @@ const updateInventoryInfo = async (req, res) => {
   await createNotifications(
     updated.followerUsers,
     `<b>Takip ettiğiniz envanter öğesi güncellendi:</b> ${updated.name} - ${updated.productSerialNumber}<br><br>${changeTable}`,
-    "info"
+    "info",
+    true
   );
 
   await createLog({
@@ -203,7 +204,8 @@ const updateInventoryLicense = async (req, res) => {
   await createNotifications(
     updated.followerUsers,
     `<b>Takip ettiğiniz envanterin lisans bilgileri güncellendi:</b> ${updated.name} - ${updated.productSerialNumber}<br><br>${changeTable}`,
-    "info"
+    "info",
+    true
   );
 
   await createLog({
@@ -240,10 +242,9 @@ const deleteInventory = async (req, res) => {
 
 const changeStatus = async (req, res) => {
   try {
+    console.log("statu değiştirme")
     const { id } = req.params;
-    console.log(req.body)
     const status = req.body.status;
-    console.log(status)
 
     // Inventory öğesini güncelle
     const updatedItem = await Inventory.findByIdAndUpdate(
@@ -305,16 +306,16 @@ const followItem = async (req, res) => {
 
 const unfollowItem = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const userId = req.userId;
     const inventoryItem = await Inventory.findById(id);
     if (!inventoryItem) {
       return res.status(404).json({ success: false, message: "Inventory item not found" });
     }
-    if (!inventoryItem.followers.includes(userId)) {
+    if (!inventoryItem.followerUsers.includes(userId)) {
       return res.status(400).json({ success: false, message: "You are not following this item" });
     }
-    inventoryItem.followers = inventoryItem.followers.filter(followerId => followerId.toString() !== userId);
+    inventoryItem.followerUsers = inventoryItem.followerUsers.filter(followerId => followerId.toString() !== userId);
     await inventoryItem.save();
     res.json({ success: true, message: "You have unfollowed this item" });
   } catch (error) {

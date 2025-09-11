@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Her gün saat 13:57'de çalışır
-cron.schedule("45 16 * * *", async () => {
+cron.schedule("01 09 * * 1", async () => {
   try {
     const now = new Date();
     const threeMonthsLater = new Date(now.getTime() + 3 * 30 * 24 * 60 * 60 * 1000);

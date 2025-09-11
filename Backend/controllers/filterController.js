@@ -41,6 +41,7 @@ const allInventory = async (req, res) => {
           lisansStartDate: 1,
           lisansEndDate: 1,
           productSerialNumber: 1,
+          followerUsers: 1,
           siteId: '$site._id',
           siteName: '$site.name',
           projectId: '$project._id',

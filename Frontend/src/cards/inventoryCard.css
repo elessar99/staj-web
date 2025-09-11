@@ -39,7 +39,7 @@
 /* Statü select */
 .inventoryCardSelect {
   color: black;
-  padding: 8px 10px;
+  padding: 8px 0px;
   border: 2px solid #b2e0dd;
   border-radius: 6px;
   font-size: 13px;
@@ -47,7 +47,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
-  margin: 0 4px;
+  margin: 0 10px;
 }
 
 .inventoryCardSelect:focus {
@@ -60,7 +60,7 @@
 .inventoryCardMenu {
   cursor: pointer;
   font-size: 20px;
-  padding: 6px;
+  padding: 6px 15px;
   transition: transform 0.3s ease;
   user-select: none;
 }

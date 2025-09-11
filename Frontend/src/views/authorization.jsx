@@ -4,6 +4,7 @@ import UserCard from "../cards/userCard";
 import { useEffect } from "react";
 import { useState } from "react";
 import NotUserCard from "../cards/notUserCard";
+import "../vCss/userPage.css"
 import "./authorization.css"
 import SearchBar from "../components/SearchBar";
 
@@ -15,15 +16,11 @@ const Authorization = () => {
   const [users, setUsers] = useState([])
   const [noneVerifiedUsers, setNoneVerifiedUsers] = useState([])
 
-  const [responseMessage, setResponseMessage] = useState(null);
-  const [messageText, setMessageText] = useState("");
-  const [messageTitle, setMessageTitle] = useState("");
   const [receivedMessage, setReceivedMessage] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
 
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [selectedMsg, setSelectedMsg] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [phone, setPhone] = useState(null)
   const [department, setDepartment] = useState(null)
@@ -41,7 +38,7 @@ const Authorization = () => {
 
   const markAsRead = async (messageId) => {
     try {
-      await axios.patch(`http://localhost:5000/api/messages/read/${messageId}`, {}, {
+      await axios.patch(`http://localhost:5000/api/notification/${messageId}`, {}, {
         withCredentials: true,
         credentials: 'include'
       });
@@ -57,28 +54,6 @@ const Authorization = () => {
     }
   };
 
-    const handleSendMessage = async (userId) => {
-    try {
-      await axios.post(
-        "http://localhost:5000/api/messages",
-        {
-          toUserId: userId,
-          content: messageText,
-          title: messageTitle,
-        },
-        {
-          withCredentials: true,
-          credentials: "include",
-        }
-      );
-      alert("Message sent successfully!");
-      setMessageTitle("");
-      setMessageText("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-      alert("Failed to send message.");
-    }
-  };
 
   const handleDeleteMessage = async (messageId, isRead) => {
     try {
@@ -86,7 +61,7 @@ const Authorization = () => {
         alert("You can only delete read messages.");
         return;
       }
-      await axios.delete(`http://localhost:5000/api/messages/${messageId}`, {
+      await axios.delete(`http://localhost:5000/api/notification/${messageId}`, {
         withCredentials: true,
         credentials: 'include'
       });
@@ -117,12 +92,12 @@ const Authorization = () => {
 
     const fetchingMessages = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/messages', {
+      const response = await axios.get('http://localhost:5000/api/notification', {
         withCredentials: true,
         credentials: 'include'
       });
       setMessages(response.data || []);
-      console.log(response.data)
+      console.log("notification: ",response.data)
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
@@ -133,15 +108,6 @@ const Authorization = () => {
     fetchingData();
     fetchingMessages();
   }, []);
-
-  const handleMsgClick = (msg) => setSelectedMsg(msg);
-  const handleClosePopup = () => setSelectedMsg(null);
-
-  const handleDeleteMsg = async (msgId) => {
-    // Silme işlemi örnek
-    setMessages(messages.filter(m => m._id !== msgId));
-    setSelectedMsg(null);
-  };
 
   const toggleUserVerification = () => {
     setUserVerificationBtn(!userVerificationBtn);
@@ -160,7 +126,7 @@ const Authorization = () => {
         }
       );
       setNoneVerifiedUsers(response.data)
-      console.log(response)
+      console.log("yeni user",response.data)
     } catch (error){
       console.log("Error: ", error.response);
     }
@@ -244,32 +210,28 @@ if (!user) return <div>Yükleniyor...</div>;
             :(user.sicilNo || "Belirtilmemiş")}</div>
           </div>
         </div>
-        <div className="editUserInfoSection">
-          <div className="userInfoLineBtn" >edit</div>
-        </div>
     </div>
-
         <div>
-                    {/* Gelen Mesajlar */}
+                    {/* Gelen bildirimler */}
           <div
             className="MessagesBtn"
             onClick={() => {
               setReceivedMessage(!receivedMessage);
             }}
           >
-            Received Messages - {counterUnReadMessages(messages.receivedMessages || [])}
+            Notifications - {counterUnReadMessages(messages || [])} unread
           </div>
-          {receivedMessage && (
+          {(messages.length > 0) && (receivedMessage) && (
             <div className="receivedMessages">
-              {messages.receivedMessages &&
-                messages.receivedMessages.map((msg) => (
+              {messages &&
+                messages.map((msg) => (
                   <div className="receivedMessagesCard">
                   <div
                     key={msg._id}
                     className="messageItem receivedItem"
                     onClick={() => handleSelectMessage(msg)}
                   >
-                    <div className="receivedMessagesTitle">{msg.title}</div>
+                    <div className="receivedMessagesTitle">{msg.type}</div>
                     <div className="receivedMessageContent">Mesajı görmek için tıklayın</div>
                     <div className="messageDate">
                       {new Date(msg.timestamp).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" })}
@@ -299,7 +261,9 @@ if (!user) return <div>Yükleniyor...</div>;
               {noneVerifiedUsers.length > 0 ? (
                   <div className="User-list">
                       {noneVerifiedUsers.map((user) => (
-                          <NotUserCard key={user._id} userId={user._id} email={user.email} permissions={user.permissions} isAdmin={user.isAdmin} userName={user.userName}/>
+                          <NotUserCard key={user._id} userId={user._id} email={user.email} 
+                          permissions={user.permissions} isAdmin={user.isAdmin} userName={user.userName}
+                          department={user.department} sicilNo={user.sicilNo} position={user.position} />
                       ))}
                   </div>
               ) : (
@@ -320,7 +284,9 @@ if (!user) return <div>Yükleniyor...</div>;
               {clearUserList.length > 0 ? (
                   <div className="User-list">
                       {clearUserList.map((user) => (
-                          <UserCard key={user._id} userId={user._id} email={user.email} permissions={user.permissions} isAdmin={user.isAdmin} userName={user.userName}/>
+                          <UserCard key={user._id} userId={user._id} email={user.email} 
+                          permissions={user.permissions} isAdmin={user.isAdmin} userName={user.userName}
+                          department={user.department} sicilNo={user.sicilNo} position={user.position}/>
                       ))}
                   </div>
               ) : (
@@ -331,8 +297,11 @@ if (!user) return <div>Yükleniyor...</div>;
       {selectedMessage && (
         <div className="messagePopupOverlay" onClick={() => setSelectedMessage(null)}>
           <div className="messagePopup" onClick={(e) => e.stopPropagation()}>
-            <h3 className="popupTitle">{selectedMessage.title}</h3>
-            <p className="popupContent">{selectedMessage.content}</p>
+            <h3 className="popupTitle">{selectedMessage.type}</h3>
+            {selectedMessage.isHtml ? <div
+                  className="popupContent"
+                  dangerouslySetInnerHTML={{ __html: selectedMessage.content }}
+                /> :(<p className="popupContent">{selectedMessage.content}</p>)}
             <div className="popupDate">
               {new Date(selectedMessage.timestamp).toLocaleString("tr-TR", {
                 timeZone: "Europe/Istanbul",
@@ -341,22 +310,13 @@ if (!user) return <div>Yükleniyor...</div>;
             <div className="popupStatus">
               {selectedMessage.read ? "Okundu" : "Okunmadı"}
             </div>
-            {(user._id === selectedMessage.to)? (<button className="popupCloseBtn" onClick={() => {
-              setResponseMessage(selectedMessage)
-              setMessageTitle("Re: "+selectedMessage.title)
-              setSelectedMessage(null)
-            }}>
-              Response Message
-            </button>):<button className="popupCloseBtn" onClick={() => setSelectedMessage(null)}>
-              Delete Message
-            </button>}
             <button className="popupCloseBtn" onClick={() => setSelectedMessage(null)}>
               Close
             </button>
           </div>
         </div>
       )}
-      {responseMessage && (
+      {/* {responseMessage && (
         <div className="messagePopupOverlay" onClick={() => {
           setResponseMessage(null)
           setMessageText("")
@@ -383,7 +343,7 @@ if (!user) return <div>Yükleniyor...</div>;
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

@@ -25,6 +25,7 @@ function App() {
           withCredentials: true
         } );
       setControl(true)
+      console.log(response.data.user)
       dispatch({ type: "SET_USER", payload: response.data.user})
       setLoading(false)
     } catch (error) {

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { link } = require("../routes/projectRoutes");
 
 const InventorySchema = new mongoose.Schema({
     _id: {

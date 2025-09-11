@@ -69,27 +69,27 @@ const Sites = () => {
         }
     };
 
-    const deleteSite = async () => {
-        try {       
-            if (!siteId) {
-                alert("Please enter a project ID to delete.");
-                return;
-            }
-            if (!(sites.some(site => site._id === siteId))) {
-                alert("Project ID not found.");
-                return;
-            }
-            const response = await axios.delete(`http://localhost:5000/api/sites/${siteId}`,{
-                withCredentials: true,
-                credentials: 'include'
-            });
-            console.log("Site deleted:", response.data);
-            await fetchSites();
-            setSiteId(""); // Input'u temizle
-        } catch (error) {
-            console.error("Error deleting site:", error);    
-            alert("Error deleting site: " + error.message);
-        }}
+    // const deleteSite = async () => {
+    //     try {       
+    //         if (!siteId) {
+    //             alert("Please enter a project ID to delete.");
+    //             return;
+    //         }
+    //         if (!(sites.some(site => site._id === siteId))) {
+    //             alert("Project ID not found.");
+    //             return;
+    //         }
+    //         const response = await axios.delete(`http://localhost:5000/api/sites/${siteId}`,{
+    //             withCredentials: true,
+    //             credentials: 'include'
+    //         });
+    //         console.log("Site deleted:", response.data);
+    //         await fetchSites();
+    //         setSiteId(""); // Input'u temizle
+    //     } catch (error) {
+    //         console.error("Error deleting site:", error);    
+    //         alert("Error deleting site: " + error.message);
+    //     }}
 
     const fetchSites = async () => {
         try {
@@ -99,7 +99,7 @@ const Sites = () => {
             });
             setprojectName(response.data.project[0].name)
             console.log(response.data)
-            dispatch({ type: "SET_SITES", payload: response.data.sites });
+            dispatch({ type: "SET_SITES", payload: response.data.clearSites });
         } catch (error) {
             console.log("Error fetching site:", error);
         }
@@ -119,13 +119,13 @@ const Sites = () => {
                     <div className="commonCreateBtn" onClick={createSite}>Create Site</div>
                 </div>
             </div>
-            <h2>Project: {projectName}</h2>
+            <h2>Project: {projectName} {clearSites.length}</h2>
             <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
             {clearSites.length > 0 ? (
                 <div className="sitesList">
                     {clearSites.map((site) => (
                         <SiteCard key={site._id} name={site.name} _id={site._id} projectId={site.ProjectId}
-                        inventoryCount={site.inventoryCount} projectName={"afnslofbnasfnawş"}/>
+                        inventoryCount={site.inventoryCount} projectName={projectName}/>
                     ))}
                 </div>
             ) : (

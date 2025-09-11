@@ -10,6 +10,10 @@ const NotificationSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
+    isHtml: { 
+        type: Boolean, 
+        default: false   
+    },
     type: { 
         type: String, 
         default: "info" // örn: info, warning, message 

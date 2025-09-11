@@ -58,6 +58,7 @@
 .inventoryInputBar {
   margin-bottom: 15px;
 }
+
 .inventoryInputBarSelect {
   text-align: left;
   color: black;
@@ -123,13 +124,25 @@
   background: linear-gradient(to right, #40e0d0, #38c9ba);
   border-radius: 8px;
   margin-bottom: 15px;
-  padding: 0 15px;
+  padding: 0 0px 0 0;
 }
 
 .inventoryHeaderBar {
   display: flex;
   align-items: center;
   padding: 15px 0;
+}
+
+.inventoryHeaderItemSelect{
+  color: black;
+  padding: 8px 0px;
+  border: 2px solid #b2e0dd;
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: #f9fdfc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
 }
 
 .inventoryHeaderItem {
@@ -142,6 +155,35 @@
 .flex1 { flex: 1; }
 .flex2 { flex: 2; }
 .flex3 { flex: 3; }
+
+.inventoryFilterBar{
+  display: flex;
+  gap: 15px;
+  justify-content: start;
+  align-items: center;
+}
+.inputFilter{
+  color: #000;
+  display: flex;
+  padding: 8px 15px;
+  border: 2px solid #b2e0dd;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9fdfc;
+  transition: all 0.3s ease;
+  margin: 0 100px 25px;
+  width: 200px;
+}
+.inputFilterOption{
+  color: black;
+  padding: 8px 15px;
+  border: 2px solid #b2e0dd;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9fdfc;
+  transition: all 0.3s ease;
+  width: 150px;
+}
 
 /* Inventory List */
 .inventoryList {
@@ -159,6 +201,17 @@
   background-color: #f9fdfc;
   border-radius: 8px;
   border: 1px dashed #b2e0dd;
+}
+
+.subSiteContainer{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+}
+.subSiteCard{
+  width: 360px;
+  margin: auto;
 }
 
 /* Responsive Tasarım */

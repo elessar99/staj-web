@@ -15,7 +15,8 @@ router.get("/me", authMiddleware, async (req, res) => {
         user: {
         userName: user.userName,
         email: user.email,
-        isAdmin: user.isAdmin
+        isAdmin: user.isAdmin,
+        _id: user._id
         },
     });
     } catch (err) {

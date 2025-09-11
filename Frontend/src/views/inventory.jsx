@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import InventoryCard from "../cards/inventoryCard";
+import siteCard from "../cards/siteCard";
 import "./inventory.css";
 import SearchBar from "../components/SearchBar";
 import { exportToExcel } from "../utils/exportToExcel";
+import SiteCard from "../cards/siteCard";
 
 const Inventory = () => {
     const dispatch = useDispatch();
@@ -28,6 +30,10 @@ const Inventory = () => {
     const [addItem, setAddItem] = useState(false);
     const [uploadExcel, setUploadExcel] = useState(false)
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [subSiteName, setSubSiteName] = useState("")
+    const [supSites, setSupSites] = useState([])
+    const [projectName, setProjectName] = useState("")
+    const User = useSelector((state) => state.user || []);
 
     const handleExport = () => {
         const formattedData = inventories.map((item) => ({
@@ -208,7 +214,30 @@ const Inventory = () => {
             console.error("Error creating inventory:", error);
             alert("Error creating inventory: " + (error.response?.data?.message || error.message));
         }
-        };
+    };
+
+    
+
+    const createSubSite = async () => {
+        try {
+            if (subSiteName.length > 2) {
+                const response = await axios.post(`http://localhost:5000/api/sites/sub/${siteId}`, {
+                    name: subSiteName,
+                    parentSiteId: siteId
+                },{
+                    withCredentials: true,
+                    credentials: 'include'
+                });
+                console.log("SubSite created:", response.data);
+                window.location.reload();
+            } else {
+                alert("SubSite name must be at least 2 characters long.");
+                return;
+            }
+        } catch (error) {
+            console.log("Error creating SubSite:", error);
+        }
+    };
 
     const fetchInventory = async () => {
         try {
@@ -222,9 +251,28 @@ const Inventory = () => {
             console.error("Error fetching projects:", error);
         }
     };
+    const fetchSite = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/sites/sub/${siteId}`,{
+                withCredentials: true,
+                credentials: 'include'
+            });
+            setSupSites(response.data.sites)
+            setProjectName(response.data.projectName)
+            console.log("subSites:", response.data);
+        } catch (error) {
+            console.error("Error fetching site:", error);
+        }
+    };
     useEffect(() => {
         fetchInventory();
+        fetchSite();
     }, [siteId]);
+
+    const followed = (userId, followerUsers) => {
+        return followerUsers.includes(userId);
+    }
+
   return (
     <>
         <div className="inventoryContainer">
@@ -232,6 +280,10 @@ const Inventory = () => {
                 <div className="inventoryAddBtn" onClick={handleChangeAddItem}>Add Item</div>
                 <div className="inventoryAddBtn" onClick={handleChangeUploadExcel}>Upload Excel</div>
                 <div className="inventoryAddBtn" onClick={handleExport}>Export Excel</div>
+                <input className="creatDeletInput" type="text" placeholder="Enter SubSite Name" 
+                style={{maxWidth: "200px", marginLeft: "100px"}}
+                onChange={(e)=>{setSubSiteName(e.target.value)}} value={subSiteName}/>
+                <div className="inventoryAddBtn" onClick={createSubSite}>Add SubSite</div>
             </div>
             <div className="navBar">
                 {addItem && (<div className="addInventory">
@@ -279,9 +331,19 @@ const Inventory = () => {
                     <div className="createDeletBtn" onClick={handleUpload}>Upload Excel</div>
                 </div>)}
             </div>
+                {supSites.length > 0 && (
+                    <div className="subSiteContainer">
+                        {supSites.map((site) => (
+                            <div className="subSiteCard">
+                                <SiteCard key={site._id} name={site.name} _id={site._id} projectId={site.ProjectId}
+                                    inventoryCount={site.inventoryCount} projectName={projectName}/>
+                            </div>
+                        ))}
+                    </div>
+                )}
             <div className="inventoryFilterBar">
                 <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
-                <select name="inputFilter" id="00" onChange={(e)=>{setCategory(e.target.value)}}>
+                <select className="inputFilter" id="00" onChange={(e)=>{setCategory(e.target.value)}}>
                     <option className="inputFilterOption" value="all">All</option>
                     <option className="inputFilterOption" value="name">Name</option>
                     <option className="inputFilterOption" value="location">Location</option>
@@ -321,7 +383,8 @@ const Inventory = () => {
                     {clearInventory.map((item) => (
                         <InventoryCard key={item._id} device={item.device} name={item.name} link={item.link} 
                         productSerialNumber={item.productSerialNumber} location={item.location} 
-                        status={item.status} _id={item._id} lisansStart={item.lisansStartDate} lisansEnd={item.lisansEndDate} />
+                        status={item.status} _id={item._id} lisansStart={item.lisansStartDate} lisansEnd={item.lisansEndDate}
+                        followed={followed(User.id, item.followerUsers)} />
                     ))}
                 </div>
             ) : (

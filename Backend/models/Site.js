@@ -9,14 +9,18 @@ const SiteSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Project" 
   },
-  subSites: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Site",
-  }],
   topSite: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Site", 
     default: null 
+  },
+  hasSubSite: { 
+    type: Boolean, 
+    default: false
+  },
+  isSubSite: { 
+    type: Boolean, 
+    default: false
   },
 });
 

@@ -8,7 +8,7 @@ const TOKEN_SURESI = "30d";
 
 const register = async (req, res) => {
   try {
-    const { email, userName, password } = req.body;
+    const { email, userName, password, sicilNo, department, position } = req.body;
     if (!email || !userName || !password) {
     return res.status(400).json({ error: "Tüm alanlar zorunludur" });
     }
@@ -28,12 +28,16 @@ const register = async (req, res) => {
     if (userExists) {
       return res.status(400).json({ error: "Bu e-posta zaten kayıtlı." });
     }
+    const emailControl = "@netas.com.tr";
+    if (!email.endsWith(emailControl)) {
+        return res.status(400).json({ error: "Lütfen geçerli bir şirket e-postası girin." });
+    }
 
     // Şifreyi hashle
     const hashedPassword = await bcrypt.hash(password, 10);
 
 
-    const user = new User({ email, userName , password: hashedPassword });
+    const user = new User({ email, userName , password: hashedPassword, sicilNo, department, position });
     await user.save();
 
     res.status(201).json({ message: "Kayıt başarılı." });

@@ -16,6 +16,8 @@ const FilterInventory = () => {
     const [setsortControl, setsetsortControl] = useState(false)
     const [selectStatus, setSelectStatus] = useState("all")
     const [selectDevice, setSelectDevice] = useState("all")
+    const User = useSelector((state) => state.user || []);
+
     const fetchInventory = async () => {
         try {
             const response = await axios.get(`http://localhost:5000/api/filter/inventory`,{
@@ -103,14 +105,16 @@ const FilterInventory = () => {
     const sortInventory = () => {
 
     };
+    const followed = (userId, followerUsers) => {
+        return followerUsers.includes(userId);
+    }
 
   return (
     <>
         <div className="inventoryContainer" style={{color: "black"}}>
-            {deneme}
             <div className="inventoryFilterBar">
                 <SearchBar value={search} onChange={(e) => setSearch(e.target.value)}/>
-                <select name="inputFilter" id="00" onChange={(e)=>{setCategory(e.target.value)}}>
+                <select className="inputFilter" id="00" onChange={(e)=>{setCategory(e.target.value)}}>
                     <option className="inputFilterOption" value="all">All</option>
                     <option className="inputFilterOption" value="name">Name</option>
                     <option className="inputFilterOption" value="site">Site</option>
@@ -131,9 +135,11 @@ const FilterInventory = () => {
                     </div>
                     <div className="inventoryHeaderItem flex1">Project</div>
                     <div className="inventoryHeaderItem flex1">Site</div>
-                    <div className="inventoryHeaderItem flex3" >Name</div>
+                    <div className="inventoryHeaderItem flex3">Name</div>
                     <div className="inventoryHeaderItem flex2">Link</div>
                     <div className="inventoryHeaderItem flex2">PSN</div>
+                    <div className="inventoryHeaderItem flex2">Lisans Start</div>
+                    <div className="inventoryHeaderItem flex2">Lisans End</div>
                     <div className="inventoryHeaderItem flex1">Location</div>
                     <div className="inventoryHeaderItem flex2">
                         <select className="inventoryHeaderItemSelect" name="status" id="status" onChange={(e)=>{setSelectStatus(e.target.value)}}>
@@ -144,7 +150,7 @@ const FilterInventory = () => {
                             <option className="inventoryHeaderItemOption" value="retired">Retired</option>
                         </select>
                     </div>
-                    <div className="inventoryHeaderItem flex2">Actions</div>
+                    <div className="inventoryHeaderItem flex1">Actions</div>
                 </div>
             </div>
             {clearInventory.length > 0 ? (
@@ -154,7 +160,8 @@ const FilterInventory = () => {
                         device={item.device} location={item.location} status={item.status}
                         lisansStart={item.lisansStartDate} lisansEnd={item.lisansEndDate}
                         productSerialNumber={item.productSerialNumber} _id={item._id} 
-                        sites={item.siteName} project={item.projectName}/>
+                        sites={item.siteName} project={item.projectName}
+                        followed={followed(User.id, item.followerUsers)}/>
                     ))}
                 </div>
             ) : (

@@ -2,6 +2,7 @@ const initialState  = {
     email:"",
     userName: '',
     isAdmin:"",
+    id:""
 }
 
 
@@ -11,7 +12,8 @@ export const userReducer = (state = initialState, action) => {
             return {
                 email: action.payload.email,
                 userName: action.payload.userName,
-                isAdmin: action.payload.isAdmin
+                isAdmin: action.payload.isAdmin,
+                id: action.payload._id
             };
         case 'RESET_USER':
             return state

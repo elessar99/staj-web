@@ -14,6 +14,7 @@ const InventoryCard = ({
   status = "status",
   lisansStart = "01.01.2000",
   lisansEnd = "01.01.2000",
+  followed = false
 }) => {
   const [statusState, setStatusState] = useState(status);
   const [showActions, setShowActions] = useState(false);
@@ -158,6 +159,20 @@ const InventoryCard = ({
     }
   };
 
+  const handleUnfollow = async () => {
+    setShowActions(false);
+    try {
+      await axios.post(
+        `http://localhost:5000/api/inventories/unfollow`,
+        { id: _id },
+        { withCredentials: true, credentials: "include" }
+      );
+      Swal.fire("Başarılı!", "Envanter takibi bırakıldı.", "success");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleStatusChange = async (newStatus) => {
     const result = await Swal.fire({
       title: "Statü Değiştirme Onayı",
@@ -178,7 +193,7 @@ const InventoryCard = ({
       try {
         setStatusState(newStatus);
         await axios.patch(
-          `http://localhost:5000/api/inventories/${_id}`,
+          `http://localhost:5000/api/inventories/status/${_id}`,
           { status: newStatus },
           { withCredentials: true, credentials: "include" }
         );
@@ -226,6 +241,7 @@ const InventoryCard = ({
           <option value="active">active</option>
           <option value="inactive">inactive</option>
           <option value="maintenance">maintenance</option>
+          <option value="retired">retired</option>
         </select>
 
         {/* Menü butonu */}
@@ -244,9 +260,12 @@ const InventoryCard = ({
           <div className="actionItem" onClick={handleLisans}>
             <i className="fas fa-edit"></i> Lisans Change
           </div>
-          <div className="actionItem" onClick={handleFollow}>
+          {!followed && (<div className="actionItem" onClick={handleFollow}>
             <i className="fas fa-bell"></i> Follow
-          </div>
+          </div>)}
+          {followed && (<div className="actionItem" onClick={handleUnfollow}>
+            <i className="fas fa-bell"></i> Unfollow
+          </div>)}
           <div className="actionItem delete" onClick={handleDelete}>
             <i className="fas fa-trash"></i> Delete
           </div>

@@ -1,9 +1,9 @@
 const Notification = require('../models/Notification');
 const User = require('../models/User');
 
-const createNotification = async (to, content, type = 'info') => {
+const createNotification = async (to, content, type = 'info', isHtml=false) => {
     try {
-        const notification = new Notification({ to, content, type });
+        const notification = new Notification({ to, content, type, isHtml });
         await notification.save();
         return notification;
     } catch (error) {
@@ -11,12 +11,13 @@ const createNotification = async (to, content, type = 'info') => {
     }
 };
 
-const createNotifications = async (toList, content, type= "info") => {
+const createNotifications = async (toList, content, type= "info" , isHtml=false) => {
     try {
         const notifications = toList.map(to => ({
             to,
             content,
-            type
+            type,
+            isHtml
         }));
         await Notification.insertMany(notifications);
         return notifications;

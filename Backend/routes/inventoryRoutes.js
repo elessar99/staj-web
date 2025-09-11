@@ -17,9 +17,9 @@ router.post("/", authMiddleware, addInventory);
 router.patch("/:id", authMiddleware, updateInventoryInfo);
 router.patch("/lisans/:id", authMiddleware, updateInventoryLicense);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteInventory);
-router.patch("/:id", authMiddleware, changeStatus);
+router.patch("/status/:id", authMiddleware, changeStatus);
 router.post("/follow", authMiddleware, followItem);
-router.post("/unfollow/:id", authMiddleware, unfollowItem);
+router.post("/unfollow", authMiddleware, unfollowItem);
 
 
 module.exports = router;

@@ -118,13 +118,16 @@ const getSites = async (req, res) => {
         }
       }
     ]);
+
     if (isAdmin) {
-      res.json({ sites, project });
+      const clearSites = sites.filter(site => !site.isSubSite);
+      res.json({ clearSites, project });
       return;
     }
     else {
       const filteredSites = sites.filter(site => siteIdList.some(permission => permission.sites.includes(site._id)));
-      return res.json({ sites: filteredSites, project });
+      const clearSites = filteredSites.filter(site => !site.isSubSite);
+      return res.json({ sites: clearSites, project });
     }
   } catch (error) {
     res.status(500).json({ 
@@ -204,6 +207,75 @@ const addSite = async (req, res) => {
   }
 };
 
+const createSubSite = async (req, res) => {
+  try {
+    const { parentSiteId, name} = req.body;
+    const projectId = await Site.findById(parentSiteId).then(site => site ? site.projectId : null);
+    if (!parentSiteId || !name || !projectId) {
+      return res.status(400).json({ error: 'parentSiteId, name ve projectId zorunludur' });
+    }
+
+    const parentSite = await Site.findById(parentSiteId);
+    if (!parentSite) {
+      return res.status(404).json({ error: 'Belirtilen parentSiteId bulunamadı' });
+    }
+    
+    if (!(parentSite.hasSubSite)) {
+      parentSite.hasSubSite = true;
+      await parentSite.save();
+    }
+
+    const subSite = new Site({
+      name: name,
+      projectId: projectId,
+      topSite: parentSiteId,
+      isSubSite: true
+    });
+
+    await subSite.save();
+    await parentSite.save();
+    res.json(subSite);
+  } catch (error) {
+    console.error('Error in createSubSite:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getSubsites = async (req, res) => {
+  try {
+    const { siteId } = req.params;
+    const userId = req.userId;
+    const isAdmin = req.isAdmin;
+    const subSites = await Site.find({ topSite: siteId });
+    const projectName = await Project.findById(subSites[0]?.projectId).then(proj => proj ? proj.name : '');
+    const inventoryCounts = await Inventory.aggregate([
+      { $match: { siteId: { $in: subSites.map(site => site._id) } } },
+      { $group: { _id: "$siteId", count: { $sum: 1 } } }
+    ]);
+    const subSitesWithCounts = subSites.map(site => {
+      const inventoryCount = inventoryCounts.find(ic => ic._id.toString() === site._id.toString());
+      return {
+        ...site.toObject(),
+        inventoryCount: inventoryCount ? inventoryCount.count : 0
+      };
+    });
+    if(isAdmin) {
+      return res.json({sites:subSitesWithCounts, projectName: projectName});
+    }
+    const userSiteList = await User.findById(userId).then(user => {
+      if (!user) return [];
+      return user.permissions.flatMap(p => (p.sites || []).map(id => id.toString()));
+    });
+    const filteredSubSites = subSitesWithCounts.filter(site => userSiteList.includes(site._id.toString()));
+    
+    res.json({sites:filteredSubSites, projectName: projectName});
+  } catch (error) {
+    console.error('Error in getSupsites:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 const deleteSite = async (req, res) => {
   try {
     const userId = req.userId;
@@ -238,4 +310,4 @@ const deleteSite = async (req, res) => {
     });
   }
 };
-module.exports = { getSites, addSite, deleteSite, getAllSites, getMissingSites, getIncludedSites };
+module.exports = { getSites, addSite, deleteSite, getAllSites, getMissingSites, getIncludedSites, createSubSite, getSubsites };
